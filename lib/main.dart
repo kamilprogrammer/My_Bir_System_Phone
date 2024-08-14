@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:rjd_app/Screens/AboutScreen.dart';
@@ -7,72 +10,82 @@ import 'package:rjd_app/Screens/LoginScreen.dart';
 import 'package:rjd_app/Screens/ReportScreen.dart';
 import 'package:rjd_app/Screens/admin/AdminHomeScreen.dart';
 import 'package:rjd_app/Screens/test.dart';
-import 'package:rjd_app/Screens/widgets/MenuPage.dart';
-import 'package:rjd_app/Screens/widgets/menu_item.dart';
+import 'package:http/http.dart' as http;
+import 'package:localstorage/localstorage.dart';
+import 'package:rjd_app/Screens/widgets/true.dart';
 
-class MenuItems {
-  static const home = MenuItem("الصفحة الرئيسية", Icons.home_outlined);
-  static const add =
-      MenuItem("ابلاغ عن مشكلة", Icons.add_circle_outline_outlined);
-  static const info = MenuItem("عن التطبيق", Icons.info_outline_rounded);
+late final ValueNotifier<String> user_id;
+late final ValueNotifier<String> name;
+late final ValueNotifier<String> section;
+late final ValueNotifier<String> floor;
+late final ValueNotifier<String> admin1;
 
-  static const all = <MenuItem>[home, add, info];
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await initLocalStorage();
+
+  user_id = ValueNotifier(localStorage.getItem('user_id') ?? '0');
+  name = ValueNotifier(localStorage.getItem('name') ?? '0');
+  section = ValueNotifier(localStorage.getItem('section') ?? '0');
+  floor = ValueNotifier(localStorage.getItem('floor') ?? '0');
+  admin1 = ValueNotifier(localStorage.getItem('admin1') ?? '0');
+  user_id.addListener(() {
+    localStorage.setItem('user_id', user_id.value.toString());
+    print(user_id.value);
+  });
+  name.addListener(() {
+    localStorage.setItem('name', name.value.toString());
+    print(name.value);
+  });
+
+  section.addListener(() {
+    localStorage.setItem('section', section.value.toString());
+    print(section.value);
+  });
+
+  floor.addListener(() {
+    localStorage.setItem('floor', floor.value.toString());
+    print(floor.value);
+  });
+  admin1.addListener(() {
+    localStorage.setItem('admin1', admin1.value.toString());
+    print(admin1.value);
+  });
+
+  print(user_id.value);
+  runApp(MyApp());
 }
 
-void main() {
-  runApp(MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: const MyApp(),
-  ));
-}
-
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
-
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  MenuItem current = MenuItems.home;
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: ZoomDrawer(
-        style: DrawerStyle.defaultStyle,
-        angle: 5,
-        menuBackgroundColor: Colors.white,
-        mainScreenTapClose: true,
-        overlayBlur: 2.0,
-        menuScreen: Builder(
-          builder: (context) => Menupage(
-            current: current,
-            onselect: (item) {
-              setState(() {
-                current = item;
-              });
-              ZoomDrawer.of(context)!.close();
-            },
-          ),
-        ),
-        mainScreen: getScreen(),
-      ),
-    );
+    return MaterialApp(debugShowCheckedModeBanner: false, home: LoginScreen());
   }
+}
 
-  Widget getScreen() {
-    switch (current) {
-      case MenuItems.home:
-        return Homescreen();
+updatelocal() async {
+  final response = await http
+      .post(Uri.parse("http://192.168.1.104:8000/user/${user_id.value}"));
 
-      case MenuItems.add:
-        return ReportScreen();
+  final result = jsonDecode(response.body) as Map<String, dynamic>;
+  name.value = result['username'];
+  section.value = result['section'];
+  floor.value = result['floor'];
+  admin1.value = result['admin'];
+}
 
-      case MenuItems.info:
-      default:
-        return AboutScreen();
-    }
+decideScreen() {
+  updatelocal();
+  print(admin1.value);
+  if (admin1.value == 'true') {
+    return Adminhomescreen();
+  } else if (user_id.value != '0' &&
+      name.value != '0' &&
+      section.value != '0' &&
+      floor.value != '0') {
+    return Homescreen();
+  } else {
+    return LoginScreen();
   }
 }
 

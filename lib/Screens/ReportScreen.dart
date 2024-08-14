@@ -1,5 +1,12 @@
+import 'dart:convert';
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
-import 'package:rjd_app/Screens/widgets/Drawer.dart';
+import 'package:http/http.dart' as http;
+import 'package:rjd_app/Screens/HomeScreen.dart';
+import 'package:rjd_app/Screens/widgets/false.dart';
+import 'package:rjd_app/Screens/widgets/true.dart';
+import 'package:rjd_app/main.dart';
 
 class ReportScreen extends StatefulWidget {
   const ReportScreen({super.key});
@@ -17,9 +24,19 @@ class _ReportScreenState extends State<ReportScreen> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'إضافة بلاغ',
+          style: TextStyle(
+            fontFamily: 'font1',
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        surfaceTintColor: Color.fromARGB(255, 255, 255, 255),
+        centerTitle: true,
+      ),
       body: SingleChildScrollView(
         child: Container(
-          height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
           clipBehavior: Clip.antiAlias,
           decoration: BoxDecoration(
@@ -35,22 +52,10 @@ class _ReportScreenState extends State<ReportScreen> {
             ),
           ),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               SizedBox(
-                height: 46,
-              ),
-              Text(
-                'الابلاغ عن عطل',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 32,
-                  fontFamily: 'font1',
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              SizedBox(
-                height: 28,
+                height: 70,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -168,7 +173,7 @@ class _ReportScreenState extends State<ReportScreen> {
                       ),
                       textAlign: TextAlign.right,
                       keyboardType: TextInputType.name,
-                      controller: place_controller,
+                      controller: kind_controller,
                       decoration: InputDecoration(
                         hintText: 'ما بعرف شو حط هون',
                         hintStyle: TextStyle(
@@ -235,8 +240,8 @@ class _ReportScreenState extends State<ReportScreen> {
                         fontWeight: FontWeight.w700,
                       ),
                       textAlign: TextAlign.right,
-                      keyboardType: TextInputType.name,
-                      controller: place_controller,
+                      keyboardType: TextInputType.multiline,
+                      controller: desc_controller,
                       decoration: InputDecoration(
                         hintText: 'ما بعرف شو حط هون',
                         hintStyle: TextStyle(
@@ -284,22 +289,81 @@ class _ReportScreenState extends State<ReportScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      'إرسال',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontFamily: 'Janna LT',
-                        fontWeight: FontWeight.w700,
+                    TextButton(
+                      onPressed: SendReport,
+                      child: Text(
+                        'إرسال',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontFamily: 'font1',
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                   ],
                 ),
               ),
+              SizedBox(
+                height: 300,
+              )
             ],
           ),
         ),
       ),
     );
+  }
+
+  Future<void> SendReport() async {
+    if (kind_controller.text.isNotEmpty &&
+        desc_controller.text.isNotEmpty &&
+        place_controller.text.isNotEmpty) {
+      final response = await http.post(
+        Uri.parse("http://192.168.1.104:8000/add"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(
+          <String, String>{
+            'place': place_controller.text.toString(),
+            'desc': desc_controller.text.toString(),
+            'kind': kind_controller.text.toString(),
+            'name': name.value.toString(),
+            'userid': user_id.value.toString(),
+            'done': false.toString()
+          },
+        ),
+      );
+
+      if (response.statusCode == 201) {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => Homescreen()));
+        showDialog(
+            context: context,
+            builder: (context) => Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: MediaQuery.of(context).size.width - 80,
+                      height: MediaQuery.of(context).size.width - 40,
+                      child: True(text: "تم ارسال البلاغ"),
+                    ),
+                  ],
+                ));
+      } else {
+        showDialog(
+            context: context,
+            builder: (context) => Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: MediaQuery.of(context).size.width - 80,
+                      height: MediaQuery.of(context).size.width - 40,
+                      child: False(text: "حدث خطأ ما"),
+                    ),
+                  ],
+                ));
+      }
+    }
   }
 }

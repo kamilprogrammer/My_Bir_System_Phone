@@ -1,11 +1,13 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 //import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
-import 'package:rjd_app/Screens/widgets/Drawer.dart';
+import 'package:rjd_app/Screens/HomeScreen.dart';
+import 'package:rjd_app/Screens/admin/AdminHomeScreen.dart';
+import 'package:rjd_app/Screens/widgets/false.dart';
+import 'package:rjd_app/main.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -15,14 +17,10 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  TextEditingController name_controller = TextEditingController(
-    text: '',
-  );
+  TextEditingController name_controller = TextEditingController(text: '');
   TextEditingController floor_controller = TextEditingController(text: '');
   TextEditingController section_controller = TextEditingController(text: '');
-  TextEditingController pass_controller = TextEditingController(
-    text: '',
-  );
+  TextEditingController pass_controller = TextEditingController(text: '');
 
   @override
   Widget build(BuildContext context) {
@@ -302,7 +300,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       textAlign: TextAlign.right,
                       keyboardType: TextInputType.streetAddress,
-                      controller: pass_controller,
+                      controller: section_controller,
                       decoration: InputDecoration(
                         suffixIcon: Icon(Icons.border_inner_rounded),
                         suffixIconColor:
@@ -374,40 +372,43 @@ class _LoginScreenState extends State<LoginScreen> {
               SizedBox(
                 height: 40,
               ),
-              Container(
-                width: width - 195,
-                height: 55,
-                clipBehavior: Clip.antiAlias,
-                decoration: ShapeDecoration(
-                  color: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    side: BorderSide(width: 1, color: Color(0xFF77C9DB)),
-                    borderRadius: BorderRadius.circular(19),
+              TextButton(
+                onPressed: Login,
+                child: Container(
+                  width: width - 195,
+                  height: 55,
+                  clipBehavior: Clip.antiAlias,
+                  decoration: ShapeDecoration(
+                    color: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      side: BorderSide(width: 1, color: Color(0xFF77C9DB)),
+                      borderRadius: BorderRadius.circular(19),
+                    ),
+                    shadows: [
+                      BoxShadow(
+                        color: Color(0x3F000000),
+                        blurRadius: 12.50,
+                        offset: Offset(4, 4),
+                        spreadRadius: 0,
+                      )
+                    ],
                   ),
-                  shadows: [
-                    BoxShadow(
-                      color: Color(0x3F000000),
-                      blurRadius: 12.50,
-                      offset: Offset(4, 4),
-                      spreadRadius: 0,
-                    )
-                  ],
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      child: const Text(
-                        'تسجيل الدخول',
-                        style: TextStyle(
-                          color: Color(0xFF77C9DB),
-                          fontSize: 16,
-                          fontFamily: 'font1',
-                          fontWeight: FontWeight.w600,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        child: const Text(
+                          'تسجيل الدخول',
+                          style: TextStyle(
+                            color: Color(0xFF77C9DB),
+                            fontSize: 16,
+                            fontFamily: 'font1',
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
               SizedBox(
@@ -418,5 +419,68 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> Login() async {
+    if (name_controller.text.isNotEmpty &&
+        floor_controller.text.isNotEmpty &&
+        section_controller.text.isNotEmpty &&
+        pass_controller.text.isNotEmpty) {
+      final response = await http.post(
+        Uri.parse("http://192.168.1.104:8000/login"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(
+          <String, String>{
+            'username': name_controller.text,
+            'floor': floor_controller.text,
+            'section': section_controller.text,
+            'password': pass_controller.text,
+            'admin': admin(),
+          },
+        ),
+      );
+
+      if (response.statusCode == 201) {
+        final result = jsonDecode(response.body) as Map<String, dynamic>;
+        user_id.value = result['id'].toString();
+        name.value = result['username'].toString();
+        print(name.value);
+        section.value = result['section'];
+        floor.value = result['floor'];
+        admin1.value = admin();
+        if (admin() == 'true') {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => Adminhomescreen()));
+        } else {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => Homescreen()));
+        }
+      } else {
+        showDialog(
+          context: context,
+          builder: (context) => Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: MediaQuery.of(context).size.width - 80,
+                height: MediaQuery.of(context).size.width - 40,
+                child: False(text: "حدث خطأ ما"),
+              ),
+            ],
+          ),
+        );
+      }
+    }
+  }
+
+  admin() {
+    if (name_controller.text == 'bir' &&
+        pass_controller.text == "#bir.admin.app#") {
+      return "true";
+    } else {
+      return "false";
+    }
   }
 }
