@@ -1,9 +1,9 @@
 import 'dart:convert';
-import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:rjd_app/Screens/HomeScreen.dart';
+import 'package:rjd_app/Screens/widgets/Drawer.dart';
 import 'package:rjd_app/Screens/widgets/false.dart';
 import 'package:rjd_app/Screens/widgets/true.dart';
 import 'package:rjd_app/main.dart';
@@ -24,25 +24,36 @@ class _ReportScreenState extends State<ReportScreen> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
+      drawer: MyDrawer(),
       appBar: AppBar(
+        toolbarHeight: 50.0,
+        backgroundColor: Color.fromARGB(199, 212, 211, 247),
         title: Text(
           'إضافة بلاغ',
           style: TextStyle(
-            fontFamily: 'font1',
-            fontWeight: FontWeight.bold,
-          ),
+              fontFamily: 'font1', fontWeight: FontWeight.bold, fontSize: 18.0),
         ),
         surfaceTintColor: Color.fromARGB(255, 255, 255, 255),
         centerTitle: true,
+        leading: Builder(
+          builder: (context) => IconButton(
+            onPressed: () {
+              Scaffold.of(context).openDrawer();
+            },
+            icon: Icon(Icons.menu),
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         child: Container(
+          constraints: BoxConstraints(
+              minHeight: MediaQuery.of(context).size.height - 60),
           width: MediaQuery.of(context).size.width,
           clipBehavior: Clip.antiAlias,
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment(0.21, 0.98),
-              end: Alignment(-0.21, -0.98),
+              end: Alignment(-0.21, -1.2),
               colors: [
                 Color(0xFF17161C),
                 Color(0xFF323751),
@@ -61,7 +72,7 @@ class _ReportScreenState extends State<ReportScreen> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Container(
-                    margin: EdgeInsets.only(right: 50),
+                    margin: EdgeInsets.only(right: 30),
                     child: Text(
                       'موقع العطل',
                       style: TextStyle(
@@ -81,7 +92,7 @@ class _ReportScreenState extends State<ReportScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                    width: width - 100,
+                    width: width - 60,
                     height: 49,
                     decoration: ShapeDecoration(
                       color: Color(0xFF717AA4),
@@ -116,7 +127,7 @@ class _ReportScreenState extends State<ReportScreen> {
                           fontWeight: FontWeight.w700,
                         ),
                         border: InputBorder.none,
-                        contentPadding: EdgeInsets.all(20),
+                        contentPadding: EdgeInsets.only(right: 10),
                       ),
                     ),
                   ),
@@ -129,7 +140,7 @@ class _ReportScreenState extends State<ReportScreen> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Container(
-                    margin: EdgeInsets.only(right: 50),
+                    margin: EdgeInsets.only(right: 30),
                     child: Text(
                       'نوع العطل',
                       style: TextStyle(
@@ -149,7 +160,7 @@ class _ReportScreenState extends State<ReportScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                    width: width - 100,
+                    width: width - 60,
                     height: 49,
                     decoration: ShapeDecoration(
                       color: Color(0xFF717AA4),
@@ -184,7 +195,7 @@ class _ReportScreenState extends State<ReportScreen> {
                           fontWeight: FontWeight.w700,
                         ),
                         border: InputBorder.none,
-                        contentPadding: EdgeInsets.all(20),
+                        contentPadding: EdgeInsets.only(right: 10),
                       ),
                     ),
                   ),
@@ -197,7 +208,7 @@ class _ReportScreenState extends State<ReportScreen> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Container(
-                    margin: EdgeInsets.only(right: 50),
+                    margin: EdgeInsets.only(right: 30),
                     child: Text(
                       'وصف العطل',
                       style: TextStyle(
@@ -217,7 +228,7 @@ class _ReportScreenState extends State<ReportScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                    width: width - 100,
+                    width: width - 60,
                     height: 49,
                     decoration: ShapeDecoration(
                       color: Color(0xFF717AA4),
@@ -252,61 +263,54 @@ class _ReportScreenState extends State<ReportScreen> {
                           fontWeight: FontWeight.w700,
                         ),
                         border: InputBorder.none,
-                        contentPadding: EdgeInsets.all(20),
+                        contentPadding: EdgeInsets.only(right: 10),
                       ),
                     ),
                   ),
                 ],
               ),
               SizedBox(
-                height: 100,
+                height: 60,
               ),
-              Container(
-                width: width - 160,
-                height: 64,
-                decoration: ShapeDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment(-1.00, -0.07),
-                    end: Alignment(1, 0.07),
-                    colors: [
-                      Color(0xFF00D1FF),
-                      Color(0xFF5EE2FF),
-                      Color(0xA557E0FF)
+              TextButton(
+                onPressed: SendReport,
+                child: Container(
+                  width: width - 160,
+                  height: 55,
+                  clipBehavior: Clip.antiAlias,
+                  decoration: ShapeDecoration(
+                    color: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      side: BorderSide(width: 4.0, color: Color(0xFF2B3185)),
+                      borderRadius: BorderRadius.circular(19),
+                    ),
+                    shadows: [
+                      BoxShadow(
+                        color: Color(0xFF2B3185),
+                        blurRadius: 20,
+                        offset: Offset(0, 0),
+                        spreadRadius: 2,
+                      )
                     ],
                   ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(17),
-                  ),
-                  shadows: [
-                    BoxShadow(
-                      color: Color(0x3F000000),
-                      blurRadius: 17,
-                      offset: Offset(0, 20),
-                      spreadRadius: -4,
-                    )
-                  ],
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    TextButton(
-                      onPressed: SendReport,
-                      child: Text(
-                        'إرسال',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontFamily: 'font1',
-                          fontWeight: FontWeight.w700,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        child: const Text(
+                          'إرسال البلاغ',
+                          style: TextStyle(
+                            color: Color(0xFF2B3185),
+                            fontSize: 16,
+                            fontFamily: 'font1',
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-              SizedBox(
-                height: 300,
-              )
             ],
           ),
         ),
@@ -319,7 +323,7 @@ class _ReportScreenState extends State<ReportScreen> {
         desc_controller.text.isNotEmpty &&
         place_controller.text.isNotEmpty) {
       final response = await http.post(
-        Uri.parse("http://192.168.1.104:8000/add"),
+        Uri.parse("http://192.168.1.155:8000/add"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },

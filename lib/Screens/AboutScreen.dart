@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rjd_app/Screens/HomeScreen.dart';
+import 'package:rjd_app/Screens/admin/AdminHomeScreen.dart';
+import 'package:rjd_app/main.dart';
 
 class AboutScreen extends StatefulWidget {
   const AboutScreen({super.key});
@@ -13,16 +15,26 @@ class _AboutScreenState extends State<AboutScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+          toolbarHeight: 50.0,
           actions: [],
           title: Text(
             "عن التطبيق",
-            style: TextStyle(fontFamily: "font1"),
+            style: TextStyle(
+                fontFamily: "font1",
+                fontWeight: FontWeight.bold,
+                fontSize: 18.0),
           ),
           centerTitle: true,
-          leading: BackButton(
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios),
             onPressed: () {
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => Homescreen()));
+              if (admin1.value == 'true') {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => Adminhomescreen()));
+              } else {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => Homescreen()));
+              }
             },
           )),
       body: Container(
@@ -75,16 +87,8 @@ class _AboutScreenState extends State<AboutScreen> {
               height: 10,
             ),
             Text(
-              'Albir-complaints-App',
-              style: TextStyle(
-                color: Colors.white.withOpacity(0.7599999904632568),
-                fontSize: 18,
-                fontFamily: 'Janna LT',
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-            Text(
-              'version: 1.0.0',
+              'Rj-Data x Al-Bir Hospital \n Reports App',
+              textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 18,
@@ -92,8 +96,26 @@ class _AboutScreenState extends State<AboutScreen> {
                 fontWeight: FontWeight.w700,
               ),
             ),
+            Container(
+              margin: EdgeInsets.only(top: 20),
+              decoration: ShapeDecoration(
+                  color: Colors.black26,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10))),
+              padding: EdgeInsets.all(10),
+              child: Text(
+                textAlign: TextAlign.center,
+                'version: 1.0.5',
+                style: TextStyle(
+                  color: Colors.white.withOpacity(0.7599999904632568),
+                  fontSize: 18,
+                  fontFamily: 'Janna LT',
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
             SizedBox(
-              height: 70,
+              height: 20,
             ),
           ],
         ),

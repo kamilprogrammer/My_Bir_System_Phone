@@ -1,17 +1,18 @@
 import 'dart:convert';
-import 'dart:ffi';
-
+import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:rjd_app/Screens/AboutScreen.dart';
 
 import 'package:rjd_app/Screens/HomeScreen.dart';
 import 'package:rjd_app/Screens/LoginScreen.dart';
 import 'package:rjd_app/Screens/ReportScreen.dart';
 import 'package:rjd_app/Screens/admin/AdminHomeScreen.dart';
+import 'package:rjd_app/Screens/admin/Users.dart';
 import 'package:rjd_app/Screens/test.dart';
 import 'package:http/http.dart' as http;
 import 'package:localstorage/localstorage.dart';
+import 'package:rjd_app/Screens/widgets/Drawer.dart';
+import 'package:rjd_app/Screens/widgets/false.dart';
 import 'package:rjd_app/Screens/widgets/true.dart';
 
 late final ValueNotifier<String> user_id;
@@ -53,39 +54,80 @@ Future<void> main() async {
   });
 
   print(user_id.value);
-  runApp(MyApp());
+
+  runApp(MaterialApp(
+    home: MyApp(),
+    debugShowCheckedModeBanner: false,
+  ));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(debugShowCheckedModeBanner: false, home: LoginScreen());
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  Future<void> updatelocal() async {
+    final response = await http
+        .post(Uri.parse("http://192.168.1.155:8000/user/${user_id.value}"));
+
+    if (response.statusCode == 200) {
+      final result =
+          jsonDecode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
+
+      name.value = result['username'];
+      section.value = result['section'];
+      floor.value = result['floor'];
+      admin1.value = result['admin'];
+    } else if (response.statusCode == 404) {
+      showDialog(
+        context: context,
+        builder: (context) => Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+                width: MediaQuery.of(context).size.width - 80,
+                height: MediaQuery.of(context).size.width - 40,
+                child: False(
+                    text: "حدث خطأ ما \nالرجاء التواصل مع الكادر التقني")),
+          ],
+        ),
+      );
+      Future.delayed(const Duration(seconds: 5)).then((val) {
+        exit(0);
+      });
+    }
   }
-}
 
-updatelocal() async {
-  final response = await http
-      .post(Uri.parse("http://192.168.1.104:8000/user/${user_id.value}"));
+  decideScreen() {
+    if (user_id.value == '0') {
+      return Starter();
+    } else {
+      updatelocal().then(
+        (value) {
+          print(admin1.value);
+          if (admin1.value == 'true') {
+            return Navigator.push(context,
+                MaterialPageRoute(builder: (context) => Adminhomescreen()));
+          } else {
+            return Navigator.push(
+                context, MaterialPageRoute(builder: (context) => Homescreen()));
+          }
+        },
+      );
+    }
+  }
 
-  final result = jsonDecode(response.body) as Map<String, dynamic>;
-  name.value = result['username'];
-  section.value = result['section'];
-  floor.value = result['floor'];
-  admin1.value = result['admin'];
-}
-
-decideScreen() {
-  updatelocal();
-  print(admin1.value);
-  if (admin1.value == 'true') {
-    return Adminhomescreen();
-  } else if (user_id.value != '0' &&
-      name.value != '0' &&
-      section.value != '0' &&
-      floor.value != '0') {
-    return Homescreen();
-  } else {
-    return LoginScreen();
+  Widget build(BuildContext context) {
+    return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: Scaffold(
+          drawer: MyDrawer(),
+          body: decideScreen(),
+        ));
   }
 }
 
@@ -116,7 +158,7 @@ class _StarterState extends State<Starter> {
                     borderRadius: BorderRadius.circular(35),
                     image: DecorationImage(
                       fit: BoxFit.cover,
-                      image: NetworkImage(
+                      image: AssetImage(
                         'assets/bir.jpg',
                       ),
                     ),
@@ -136,26 +178,32 @@ class _StarterState extends State<Starter> {
               ],
             ),
             SizedBox(
-              height: 28,
+              height: 10,
             ),
             Text(
-              'Al-bir complaints application',
+              'Rj-Data x Al-Bir Hospital \n Reports App',
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: Color(0xFF5B4F4F),
-                fontSize: 16,
-                fontFamily: 'font1',
+                color: Colors.black,
+                fontSize: 18,
+                fontFamily: 'Janna LT',
                 fontWeight: FontWeight.w700,
               ),
             ),
             Container(
-              child: const Text(
-                'version: 1.0.0',
+              margin: EdgeInsets.only(top: 20),
+              decoration: ShapeDecoration(
+                  color: Colors.black26,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10))),
+              padding: EdgeInsets.all(10),
+              child: Text(
                 textAlign: TextAlign.center,
+                'version: 1.0.5',
                 style: TextStyle(
-                  color: Color(0xFF5B5050),
+                  color: Colors.black.withOpacity(0.7599999904632568),
                   fontSize: 16,
-                  fontFamily: 'font1',
+                  fontFamily: 'Janna LT',
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -170,7 +218,7 @@ class _StarterState extends State<Starter> {
                 gradient: LinearGradient(
                   begin: Alignment(-1.00, -0.04),
                   end: Alignment(1, 0.04),
-                  colors: [Color(0xFFA6FAFF), Color(0xFF1CE0EC)],
+                  colors: [Color(0xFF2B3185), Color.fromARGB(255, 43, 49, 132)],
                 ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
@@ -186,7 +234,7 @@ class _StarterState extends State<Starter> {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 24,
+                    fontSize: 18,
                     fontFamily: 'font1',
                     fontWeight: FontWeight.w700,
                   ),

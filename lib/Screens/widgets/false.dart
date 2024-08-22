@@ -10,9 +10,10 @@ class False extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width - 100,
+      width: MediaQuery.of(context).size.width - 50,
       height: MediaQuery.of(context).size.width - 20,
       child: Dialog(
+        //insetPadding: EdgeInsets.all(0),
         alignment: Alignment.center,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16), side: BorderSide.none),
@@ -28,6 +29,9 @@ class False extends StatelessWidget {
                   size: 50,
                 ),
               ],
+            ),
+            SizedBox(
+              height: 10,
             ),
             Text(
               text.toString(),

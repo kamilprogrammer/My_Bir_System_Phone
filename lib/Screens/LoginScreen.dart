@@ -55,7 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 width: 184,
                                 height: 106,
                                 decoration: ShapeDecoration(
-                                  color: Color(0xFF91B3AB),
+                                  color: Color(0xFF2B3185),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(40),
                                   ),
@@ -70,7 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               width: 182,
                               height: 182,
                               decoration: ShapeDecoration(
-                                color: Color(0xFFA0E5D9),
+                                color: Color(0xFFD4D3F7),
                                 shape: StarBorder.polygon(sides: 3),
                               ),
                             ),
@@ -170,7 +170,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ],
               ),
               SizedBox(
-                height: 20,
+                height: 30,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -190,11 +190,12 @@ class _LoginScreenState extends State<LoginScreen> {
                         )
                       ],
                     ),
-                    width: MediaQuery.of(context).size.width - 100,
+                    width: MediaQuery.of(context).size.width - 60,
+                    height: 46,
                     child: TextField(
                       style: TextStyle(
                         color: Colors.black.withOpacity(0.6499999761581421),
-                        fontSize: 16,
+                        fontSize: 14,
                         fontFamily: 'font1',
                         fontWeight: FontWeight.w700,
                       ),
@@ -202,25 +203,24 @@ class _LoginScreenState extends State<LoginScreen> {
                       keyboardType: TextInputType.name,
                       controller: name_controller,
                       decoration: InputDecoration(
-                        suffixIcon: Icon(Icons.person_outline_outlined),
-                        suffixIconColor:
-                            Colors.black.withOpacity(0.6499999761581421),
-                        hintText: 'اسم المستخدم',
-                        hintStyle: TextStyle(
-                          color: Colors.black.withOpacity(0.6499999761581421),
-                          fontSize: 16,
-                          fontFamily: 'font1',
-                          fontWeight: FontWeight.w700,
-                        ),
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.all(20),
-                      ),
+                          suffixIcon: Icon(
+                            Icons.person_outline_outlined,
+                            size: 20.0,
+                          ),
+                          suffixIconColor:
+                              Colors.black.withOpacity(0.6499999761581421),
+                          hintText: 'اسم المستخدم',
+                          hintStyle: TextStyle(
+                            color: Colors.black.withOpacity(0.6499999761581421),
+                          ),
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.only(top: 10)),
                     ),
                   )
                 ],
               ),
-              const SizedBox(
-                height: 26,
+              SizedBox(
+                height: 16,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -240,11 +240,12 @@ class _LoginScreenState extends State<LoginScreen> {
                         )
                       ],
                     ),
-                    width: MediaQuery.of(context).size.width - 100,
+                    width: MediaQuery.of(context).size.width - 60,
+                    height: 46,
                     child: TextField(
                       style: TextStyle(
                         color: Colors.black.withOpacity(0.6499999761581421),
-                        fontSize: 16,
+                        fontSize: 14,
                         fontFamily: 'font1',
                         fontWeight: FontWeight.w700,
                       ),
@@ -252,25 +253,24 @@ class _LoginScreenState extends State<LoginScreen> {
                       keyboardType: TextInputType.name,
                       controller: floor_controller,
                       decoration: InputDecoration(
-                        suffixIcon: Icon(Icons.format_list_numbered_rounded),
-                        suffixIconColor:
-                            Colors.black.withOpacity(0.6499999761581421),
-                        hintText: 'الطابق',
-                        hintStyle: TextStyle(
-                          color: Colors.black.withOpacity(0.6499999761581421),
-                          fontSize: 16,
-                          fontFamily: 'font1',
-                          fontWeight: FontWeight.w700,
-                        ),
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.all(20),
-                      ),
+                          suffixIcon: Icon(
+                            Icons.format_list_numbered_rounded,
+                            size: 20.0,
+                          ),
+                          suffixIconColor:
+                              Colors.black.withOpacity(0.6499999761581421),
+                          hintText: 'الطابق',
+                          hintStyle: TextStyle(
+                            color: Colors.black.withOpacity(0.6499999761581421),
+                          ),
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.only(top: 10)),
                     ),
                   )
                 ],
               ),
               SizedBox(
-                height: 26,
+                height: 16,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -290,11 +290,12 @@ class _LoginScreenState extends State<LoginScreen> {
                         )
                       ],
                     ),
-                    width: MediaQuery.of(context).size.width - 100,
+                    width: MediaQuery.of(context).size.width - 60,
+                    height: 46,
                     child: TextField(
                       style: TextStyle(
                         color: Colors.black.withOpacity(0.6499999761581421),
-                        fontSize: 16,
+                        fontSize: 14,
                         fontFamily: 'font1',
                         fontWeight: FontWeight.w700,
                       ),
@@ -302,25 +303,27 @@ class _LoginScreenState extends State<LoginScreen> {
                       keyboardType: TextInputType.streetAddress,
                       controller: section_controller,
                       decoration: InputDecoration(
-                        suffixIcon: Icon(Icons.border_inner_rounded),
-                        suffixIconColor:
-                            Colors.black.withOpacity(0.6499999761581421),
-                        hintText: 'القسم',
-                        hintStyle: TextStyle(
-                          color: Colors.black.withOpacity(0.6499999761581421),
-                          fontSize: 16,
-                          fontFamily: 'font1',
-                          fontWeight: FontWeight.w700,
-                        ),
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.all(20),
-                      ),
+                          suffixIcon: Icon(
+                            Icons.border_inner_rounded,
+                            size: 20.0,
+                          ),
+                          suffixIconColor:
+                              Colors.black.withOpacity(0.6499999761581421),
+                          hintText: 'القسم',
+                          hintStyle: TextStyle(
+                            color: Colors.black.withOpacity(0.6499999761581421),
+                            fontSize: 14,
+                            fontFamily: 'font1',
+                            fontWeight: FontWeight.w700,
+                          ),
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.only(top: 10)),
                     ),
                   )
                 ],
               ),
               SizedBox(
-                height: 26,
+                height: 16,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -340,31 +343,35 @@ class _LoginScreenState extends State<LoginScreen> {
                         )
                       ],
                     ),
-                    width: MediaQuery.of(context).size.width - 100,
+                    width: MediaQuery.of(context).size.width - 60,
+                    height: 46,
                     child: TextField(
                       style: TextStyle(
                         color: Colors.black.withOpacity(0.6499999761581421),
-                        fontSize: 16,
+                        fontSize: 14,
                         fontFamily: 'font1',
                         fontWeight: FontWeight.w700,
                       ),
                       textAlign: TextAlign.right,
-                      keyboardType: TextInputType.name,
+                      obscureText: true,
+                      keyboardType: TextInputType.visiblePassword,
                       controller: pass_controller,
                       decoration: InputDecoration(
-                        suffixIcon: Icon(Icons.lock_outline_rounded),
-                        suffixIconColor:
-                            Colors.black.withOpacity(0.6499999761581421),
-                        hintText: 'كلمة السر',
-                        hintStyle: TextStyle(
-                          color: Colors.black.withOpacity(0.6499999761581421),
-                          fontSize: 16,
-                          fontFamily: 'font1',
-                          fontWeight: FontWeight.w700,
-                        ),
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.all(20),
-                      ),
+                          suffixIcon: Icon(
+                            Icons.lock_outline_rounded,
+                            size: 20.0,
+                          ),
+                          suffixIconColor:
+                              Colors.black.withOpacity(0.6499999761581421),
+                          hintText: 'كلمة السر',
+                          hintStyle: TextStyle(
+                            color: Colors.black.withOpacity(0.6499999761581421),
+                            fontSize: 14,
+                            fontFamily: 'font1',
+                            fontWeight: FontWeight.w700,
+                          ),
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.only(top: 10)),
                     ),
                   )
                 ],
@@ -375,21 +382,21 @@ class _LoginScreenState extends State<LoginScreen> {
               TextButton(
                 onPressed: Login,
                 child: Container(
-                  width: width - 195,
+                  width: width - 160,
                   height: 55,
                   clipBehavior: Clip.antiAlias,
                   decoration: ShapeDecoration(
                     color: Colors.white,
                     shape: RoundedRectangleBorder(
-                      side: BorderSide(width: 1, color: Color(0xFF77C9DB)),
+                      side: BorderSide(width: 2.0, color: Color(0xFF2B3185)),
                       borderRadius: BorderRadius.circular(19),
                     ),
                     shadows: [
                       BoxShadow(
-                        color: Color(0x3F000000),
-                        blurRadius: 12.50,
-                        offset: Offset(4, 4),
-                        spreadRadius: 0,
+                        color: Color(0xFF2B3185),
+                        blurRadius: 14,
+                        offset: Offset(0, 0),
+                        spreadRadius: 1,
                       )
                     ],
                   ),
@@ -398,9 +405,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     children: [
                       Container(
                         child: const Text(
-                          'تسجيل الدخول',
+                          'إنشاء/تسجيل',
                           style: TextStyle(
-                            color: Color(0xFF77C9DB),
+                            color: Color(0xFF2B3185),
                             fontSize: 16,
                             fontFamily: 'font1',
                             fontWeight: FontWeight.w600,
@@ -412,7 +419,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               SizedBox(
-                height: 10,
+                height: 40,
               ),
             ],
           ),
@@ -427,9 +434,11 @@ class _LoginScreenState extends State<LoginScreen> {
         section_controller.text.isNotEmpty &&
         pass_controller.text.isNotEmpty) {
       final response = await http.post(
-        Uri.parse("http://192.168.1.104:8000/login"),
+        Uri.parse("http://192.168.1.155:8000/login"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          "Access-Control-Allow-Origin": "*",
+          'Accept': '*/*'
         },
         body: jsonEncode(
           <String, String>{
@@ -442,21 +451,31 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       );
 
-      if (response.statusCode == 201) {
+      if (response.body == 203.toString()) {
+        showDialog(
+          context: context,
+          builder: (context) => Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: MediaQuery.of(context).size.width - 80,
+                height: MediaQuery.of(context).size.width - 40,
+                child: False(text: "الباسوورد غير مطابق للحساب السابق"),
+              ),
+            ],
+          ),
+        );
+      } else if (response.statusCode == 201) {
         final result = jsonDecode(response.body) as Map<String, dynamic>;
         user_id.value = result['id'].toString();
-        name.value = result['username'].toString();
-        print(name.value);
-        section.value = result['section'];
-        floor.value = result['floor'];
+        name.value = name_controller.text;
+
+        section.value = section_controller.text;
+        floor.value = floor_controller.text;
         admin1.value = admin();
-        if (admin() == 'true') {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => Adminhomescreen()));
-        } else {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => Homescreen()));
-        }
+
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => MyApp()));
       } else {
         showDialog(
           context: context,
