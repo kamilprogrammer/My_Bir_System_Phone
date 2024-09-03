@@ -54,6 +54,7 @@ class User extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             AdminCard(
+              share: () {},
               name: name12,
               onTap1: onTap1,
               onTap2: onTap2,

@@ -1,22 +1,24 @@
 import 'package:flutter/material.dart';
 
 class AdminCard extends StatelessWidget {
-  AdminCard({
-    Key? key,
-    required this.name,
-    required this.onTap1,
-    required this.onTap2,
-    required this.section,
-    required this.type,
-    required this.desc,
-    required this.floor,
-    required this.done,
-    required this.admin,
-    required this.user,
-  }) : super(key: key);
+  AdminCard(
+      {Key? key,
+      required this.name,
+      required this.onTap1,
+      required this.onTap2,
+      required this.section,
+      required this.type,
+      required this.desc,
+      required this.floor,
+      required this.done,
+      required this.admin,
+      required this.user,
+      required this.share})
+      : super(key: key);
   final String name; // Username
   final VoidCallback onTap1;
   final VoidCallback onTap2;
+  final VoidCallback share;
   final String section; // String for section
   final String type; // String for type
   final String desc; // String for description
@@ -56,6 +58,18 @@ class AdminCard extends StatelessWidget {
                   children: [
                     Container(
                       height: 60,
+                      child: admin == true
+                          ? Row(
+                              children: [
+                                IconButton(
+                                  onPressed: share,
+                                  icon: Icon(Icons.share,
+                                      color: Colors.white, size: 20.0),
+                                )
+                              ],
+                              mainAxisAlignment: MainAxisAlignment.end,
+                            )
+                          : Container(),
                       decoration: ShapeDecoration(
                         gradient: LinearGradient(
                           begin: Alignment(-1.00, -0.04),

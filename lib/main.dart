@@ -72,7 +72,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Future<void> updatelocal() async {
     final response = await http
-        .post(Uri.parse("http://192.168.1.155:8000/user/${user_id.value}"));
+        .post(Uri.parse("http://192.168.1.159:8000/user/${user_id.value}"));
 
     if (response.statusCode == 200) {
       final result =

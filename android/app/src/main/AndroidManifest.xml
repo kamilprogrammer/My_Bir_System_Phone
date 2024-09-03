@@ -1,4 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
     <application
     
         android:label="Rj-Data x Al-Bir"
@@ -44,4 +45,5 @@
         </intent>
     </queries>
     <uses-permission android:name="android.permission.INTERNET"/>
+    
 </manifest>

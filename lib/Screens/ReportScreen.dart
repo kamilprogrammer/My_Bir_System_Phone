@@ -7,6 +7,7 @@ import 'package:rjd_app/Screens/widgets/Drawer.dart';
 import 'package:rjd_app/Screens/widgets/false.dart';
 import 'package:rjd_app/Screens/widgets/true.dart';
 import 'package:rjd_app/main.dart';
+import 'package:intl/intl.dart';
 
 class ReportScreen extends StatefulWidget {
   const ReportScreen({super.key});
@@ -23,6 +24,7 @@ class _ReportScreenState extends State<ReportScreen> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
+
     return Scaffold(
       drawer: MyDrawer(),
       appBar: AppBar(
@@ -323,7 +325,7 @@ class _ReportScreenState extends State<ReportScreen> {
         desc_controller.text.isNotEmpty &&
         place_controller.text.isNotEmpty) {
       final response = await http.post(
-        Uri.parse("http://192.168.1.155:8000/add"),
+        Uri.parse("http://192.168.1.159:8000/add"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -333,6 +335,7 @@ class _ReportScreenState extends State<ReportScreen> {
             'desc': desc_controller.text.toString(),
             'kind': kind_controller.text.toString(),
             'name': name.value.toString(),
+            'date': DateFormat('yyyy-MM-dd').format(DateTime.now()).toString(),
             'userid': user_id.value.toString(),
             'done': false.toString()
           },
@@ -342,6 +345,7 @@ class _ReportScreenState extends State<ReportScreen> {
       if (response.statusCode == 201) {
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => Homescreen()));
+
         showDialog(
             context: context,
             builder: (context) => Column(

@@ -434,7 +434,7 @@ class _LoginScreenState extends State<LoginScreen> {
         section_controller.text.isNotEmpty &&
         pass_controller.text.isNotEmpty) {
       final response = await http.post(
-        Uri.parse("http://192.168.1.155:8000/login"),
+        Uri.parse("http://192.168.1.159:8000/login"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           "Access-Control-Allow-Origin": "*",
@@ -446,6 +446,7 @@ class _LoginScreenState extends State<LoginScreen> {
             'floor': floor_controller.text,
             'section': section_controller.text,
             'password': pass_controller.text,
+            'worker': "false",
             'admin': admin(),
           },
         ),

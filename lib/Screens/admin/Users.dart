@@ -82,6 +82,9 @@ class _UsersState extends State<Users> {
                             final user = users[index];
                             Future Update(int status, String admin) async {
                               if (name.value == user['username']) {
+                                Future.delayed(Duration(seconds: 3), () {
+                                  Navigator.of(context).pop();
+                                });
                                 showDialog(
                                   context: context,
                                   builder: (context) => Column(
@@ -109,9 +112,12 @@ class _UsersState extends State<Users> {
                                   print("asas");
                                   final real_index = updated_user['id'];
                                   final req = await http.put(Uri.parse(
-                                      "http://192.168.1.155:8000/admin/${real_index}"));
+                                      "http://192.168.1.159:8000/admin/${real_index}"));
 
                                   if (req.statusCode == 200) {
+                                    Future.delayed(Duration(seconds: 3), () {
+                                      Navigator.of(context).pop();
+                                    });
                                     showDialog(
                                       context: context,
                                       builder: (context) => Column(
@@ -135,6 +141,9 @@ class _UsersState extends State<Users> {
                                     );
                                     fetchUsers();
                                   } else {
+                                    Future.delayed(Duration(seconds: 3), () {
+                                      Navigator.of(context).pop();
+                                    });
                                     showDialog(
                                         context: context,
                                         builder: (context) => Column(
@@ -162,9 +171,12 @@ class _UsersState extends State<Users> {
                                   print("asas");
                                   final real_index = updated_user['id'];
                                   final req = await http.put(Uri.parse(
-                                      "http://192.168.1.155:8000/not_admin/${real_index}"));
+                                      "http://192.168.1.159:8000/not_admin/${real_index}"));
 
                                   if (req.statusCode == 200) {
+                                    Future.delayed(Duration(seconds: 3), () {
+                                      Navigator.of(context).pop();
+                                    });
                                     showDialog(
                                       context: context,
                                       builder: (context) => Column(
@@ -188,6 +200,9 @@ class _UsersState extends State<Users> {
                                     );
                                     fetchUsers();
                                   } else {
+                                    Future.delayed(Duration(seconds: 3), () {
+                                      Navigator.of(context).pop();
+                                    });
                                     showDialog(
                                       context: context,
                                       builder: (context) => Column(
@@ -215,7 +230,7 @@ class _UsersState extends State<Users> {
 
                             Delete(int status) async {
                               final response = await http.post(Uri.parse(
-                                  "http://192.168.1.155:8000/user/${user_id.value}"));
+                                  "http://192.168.1.159:8000/user/${user_id.value}"));
 
                               if (response.statusCode == 200) {
                                 final result =
@@ -224,6 +239,9 @@ class _UsersState extends State<Users> {
                                 print(result['username']);
                                 print(user['username']);
                                 if (result['username'] == user['username']) {
+                                  Future.delayed(Duration(seconds: 3), () {
+                                    Navigator.of(context).pop();
+                                  });
                                   showDialog(
                                     context: context,
                                     builder: (context) => Column(
@@ -252,9 +270,12 @@ class _UsersState extends State<Users> {
                                   print("asas");
                                   final real_index = updated_report['id'];
                                   final req = await http.delete(Uri.parse(
-                                      "http://192.168.1.155:8000/del_user/${real_index}"));
+                                      "http://192.168.1.159:8000/del_user/${real_index}"));
 
                                   if (req.statusCode == 200) {
+                                    Future.delayed(Duration(seconds: 3), () {
+                                      Navigator.of(context).pop();
+                                    });
                                     showDialog(
                                       context: context,
                                       builder: (context) => Column(
@@ -277,6 +298,9 @@ class _UsersState extends State<Users> {
                                     );
                                     fetchUsers();
                                   } else {
+                                    Future.delayed(Duration(seconds: 3), () {
+                                      Navigator.of(context).pop();
+                                    });
                                     showDialog(
                                         context: context,
                                         builder: (context) => Column(
@@ -620,7 +644,7 @@ class _UsersState extends State<Users> {
 
   Future<void> fetchUsers() async {
     try {
-      final url = Uri.parse("http://192.168.1.155:8000/users");
+      final url = Uri.parse("http://192.168.1.159:8000/users");
       final response = await http.get(url);
       final body = response.bodyBytes;
       final json = jsonDecode(utf8.decode(body));

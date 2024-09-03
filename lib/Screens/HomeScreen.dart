@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import 'package:localstorage/localstorage.dart';
 import 'package:rjd_app/Screens/widgets/AdminCard.dart';
@@ -27,7 +28,7 @@ class _HomescreenState extends State<Homescreen> {
   }
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
+  String val = "All";
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -91,6 +92,7 @@ class _HomescreenState extends State<Homescreen> {
                               final report = reports[index];
 
                               return AdminCard(
+                                  share: () {},
                                   user: false,
                                   name: report['name'],
                                   onTap1: () {},
@@ -121,13 +123,14 @@ class _HomescreenState extends State<Homescreen> {
     print(user_id.value);
     try {
       final url =
-          Uri.parse("http://192.168.1.155:8000/reports/${user_id.value}");
+          Uri.parse("http://192.168.1.159:8000/reports/${user_id.value}");
       final response = await http.post(url);
       final body = response.bodyBytes;
       final json = jsonDecode(utf8.decode(body));
       setState(() {
         reports = json;
       });
+
       print(reports);
     } catch (e) {
       print(e);
