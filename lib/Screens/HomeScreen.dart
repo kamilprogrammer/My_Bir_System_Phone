@@ -7,6 +7,7 @@ import 'package:localstorage/localstorage.dart';
 import 'package:rjd_app/Screens/widgets/AdminCard.dart';
 import 'package:rjd_app/Screens/widgets/Drawer.dart';
 import 'package:rjd_app/Screens/widgets/false.dart';
+import 'package:rjd_app/Screens/widgets/share.dart';
 import 'package:rjd_app/Screens/widgets/true.dart';
 import 'package:rjd_app/main.dart';
 import 'package:http/http.dart' as http;
@@ -77,36 +78,40 @@ class _HomescreenState extends State<Homescreen> {
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.8,
                   child: RefreshIndicator(
-                    color: Colors.blueAccent,
-                    onRefresh: () {
-                      return fetch_rep_user();
-                    },
-                    child: reports.isEmpty
-                        ? False(text: "لا يوجد بلاغات\n حتى الآن")
-                        : ListView.separated(
-                            separatorBuilder: (context, index) => SizedBox(
-                              height: 20,
-                            ),
-                            itemCount: reports.length,
-                            itemBuilder: (context, index) {
-                              final report = reports[index];
+                      color: Colors.blueAccent,
+                      onRefresh: () {
+                        return fetch_rep_user();
+                      },
+                      child: reports.isEmpty
+                          ? False(
+                              text: worker.value == 'true'
+                                  ? "لايوجد أي بلاغ\n  محوّل إليك"
+                                  : "لم تقدم أي بلاغ\n حتى الآن")
+                          : ListView.separated(
+                              separatorBuilder: (context, index) => SizedBox(
+                                height: 20,
+                              ),
+                              itemCount: reports.length,
+                              itemBuilder: (context, index) {
+                                final report = reports[index];
 
-                              return AdminCard(
-                                  share: () {},
-                                  user: false,
-                                  name: report['name'],
-                                  onTap1: () {},
-                                  onTap2: () {},
-                                  section: report['place'],
-                                  type: report['kind'],
-                                  desc: report['desc'],
-                                  floor: 7,
-                                  done: bool.parse(report["done"]),
-                                  admin: false);
-                              //AdminCard(name: name, onTap1: onTap1, onTap2: onTap2, section: section, type: type, desc: desc, floor: floor, done: done, admin: admin)
-                            },
-                          ),
-                  ),
+                                return AdminCard(
+                                    share: () {
+                                      View_Share(index);
+                                    },
+                                    user: false,
+                                    name: report['name'],
+                                    onTap1: () {},
+                                    onTap2: () {},
+                                    section: report['place'],
+                                    type: report['kind'],
+                                    desc: report['desc'],
+                                    floor: 7,
+                                    done: bool.parse(report["done"]),
+                                    admin: false);
+                                //AdminCard(name: name, onTap1: onTap1, onTap2: onTap2, section: section, type: type, desc: desc, floor: floor, done: done, admin: admin)
+                              },
+                            )),
                 ),
                 const SizedBox(
                   height: 10,
@@ -119,11 +124,27 @@ class _HomescreenState extends State<Homescreen> {
     );
   }
 
+  void View_Share(int status) async {
+    final report_shared = reports[status];
+    int report_id = report_shared['id'];
+    print(report_id);
+
+    showDialog(
+        context: context,
+        builder: (context) => Container(
+              height: MediaQuery.of(context).size.height - 400,
+              width: MediaQuery.of(context).size.width - 60,
+              child: ShareWidget(
+                report_id: report_id,
+              ),
+            ));
+  }
+
   Future<void> fetch_rep_user() async {
     print(user_id.value);
     try {
       final url =
-          Uri.parse("http://192.168.1.159:8000/reports/${user_id.value}");
+          Uri.parse("http://192.168.160.248:8000/reports/${user_id.value}");
       final response = await http.post(url);
       final body = response.bodyBytes;
       final json = jsonDecode(utf8.decode(body));

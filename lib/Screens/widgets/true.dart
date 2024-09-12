@@ -9,33 +9,36 @@ class True extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      alignment: Alignment.center,
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16), side: BorderSide.none),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.assignment_turned_in,
-                color: Colors.blueAccent,
-                size: 50,
-              ),
-            ],
-          ),
-          Text(
-            text.toString(),
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 18,
-              fontFamily: 'font1',
-              fontWeight: FontWeight.w700,
+    return Container(
+      padding: EdgeInsets.all(8),
+      child: Dialog(
+        alignment: Alignment.center,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16), side: BorderSide.none),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.assignment_turned_in,
+                  color: Colors.blueAccent,
+                  size: 50,
+                ),
+              ],
             ),
-          ),
-        ],
+            Text(
+              text.toString(),
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 16,
+                fontFamily: 'font1',
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -10,6 +10,7 @@ class False extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: EdgeInsets.all(8),
       width: MediaQuery.of(context).size.width - 50,
       height: MediaQuery.of(context).size.width - 20,
       child: Dialog(
@@ -37,7 +38,7 @@ class False extends StatelessWidget {
               text.toString(),
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 16,
                 fontFamily: 'font1',
                 fontWeight: FontWeight.w700,
               ),

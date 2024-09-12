@@ -20,6 +20,7 @@ late final ValueNotifier<String> name;
 late final ValueNotifier<String> section;
 late final ValueNotifier<String> floor;
 late final ValueNotifier<String> admin1;
+late final ValueNotifier<String> worker;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,6 +31,8 @@ Future<void> main() async {
   section = ValueNotifier(localStorage.getItem('section') ?? '0');
   floor = ValueNotifier(localStorage.getItem('floor') ?? '0');
   admin1 = ValueNotifier(localStorage.getItem('admin1') ?? '0');
+  worker = ValueNotifier(localStorage.getItem('worker') ?? '0');
+
   user_id.addListener(() {
     localStorage.setItem('user_id', user_id.value.toString());
     print(user_id.value);
@@ -52,6 +55,10 @@ Future<void> main() async {
     localStorage.setItem('admin1', admin1.value.toString());
     print(admin1.value);
   });
+  worker.addListener(() {
+    localStorage.setItem('worker', worker.value.toString());
+    print(worker.value);
+  });
 
   print(user_id.value);
 
@@ -72,7 +79,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Future<void> updatelocal() async {
     final response = await http
-        .post(Uri.parse("http://192.168.1.159:8000/user/${user_id.value}"));
+        .post(Uri.parse("http://192.168.160.248:8000/user/${user_id.value}"));
 
     if (response.statusCode == 200) {
       final result =
@@ -82,6 +89,7 @@ class _MyAppState extends State<MyApp> {
       section.value = result['section'];
       floor.value = result['floor'];
       admin1.value = result['admin'];
+      worker.value = result['worker'];
     } else if (response.statusCode == 404) {
       showDialog(
         context: context,

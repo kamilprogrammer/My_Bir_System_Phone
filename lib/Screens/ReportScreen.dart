@@ -325,7 +325,7 @@ class _ReportScreenState extends State<ReportScreen> {
         desc_controller.text.isNotEmpty &&
         place_controller.text.isNotEmpty) {
       final response = await http.post(
-        Uri.parse("http://192.168.1.159:8000/add"),
+        Uri.parse("http://192.168.160.248:8000/add"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -336,6 +336,8 @@ class _ReportScreenState extends State<ReportScreen> {
             'kind': kind_controller.text.toString(),
             'name': name.value.toString(),
             'date': DateFormat('yyyy-MM-dd').format(DateTime.now()).toString(),
+            'done_by': '',
+            'done_by2': '',
             'userid': user_id.value.toString(),
             'done': false.toString()
           },
@@ -343,6 +345,10 @@ class _ReportScreenState extends State<ReportScreen> {
       );
 
       if (response.statusCode == 201) {
+        kind_controller.clear();
+        desc_controller.clear();
+        place_controller.clear();
+
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => Homescreen()));
 

@@ -39,6 +39,19 @@ class _ShareState extends State<ShareWidget> {
     false,
     false,
     false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
   ];
 
   @override
@@ -91,30 +104,33 @@ class _ShareState extends State<ShareWidget> {
                       final worker = workers[index];
 
                       return ListTile(
-                        selected: workers_select[index],
+                        selected:
+                            share1 == worker['id'] || share2 == worker['id'],
                         selectedTileColor: Color.fromARGB(56, 78, 78, 78),
-                        tileColor: workers_select[index] == false
-                            ? Colors.white24
-                            : Colors.amber,
+                        tileColor: Colors.white24,
                         onLongPress: () {
-                          if (workers_select[index] == true) {
-                            if (share1 == index + 1) {
+                          print(share1);
+                          print(share2);
+                          if (share1 == worker['id'] ||
+                              share2 == worker['id']) {
+                            if (share1.toString() == worker['id'].toString()) {
                               setState(() {
                                 share1 = 0;
-                                workers_select[index] = false;
                               });
-                            } else if (share2 == index + 1) {
+
+                              print(share1);
+                            } else if (share2.toString() ==
+                                worker['id'].toString()) {
                               setState(() {
                                 share2 = 0;
-                                workers_select[index] = false;
                               });
+
+                              print(share2);
                             } else {
-                              Future.delayed(Duration(seconds: 3), () {
+                              Future.delayed(Duration(seconds: 1), () {
                                 Navigator.of(context).pop();
                               });
-                              Future.delayed(Duration(seconds: 3), () {
-                                Navigator.of(context).pop();
-                              });
+
                               showDialog(
                                 context: context,
                                 builder: (context) => Column(
@@ -136,13 +152,11 @@ class _ShareState extends State<ShareWidget> {
                           } else {
                             if (share1 == 0) {
                               setState(() {
-                                share1 = index + 1;
-                                workers_select[index] = true;
+                                share1 = worker['id'];
                               });
-                            } else {
+                            } else if (share2 == 0) {
                               setState(() {
-                                share2 = index + 1;
-                                workers_select[index] = true;
+                                share2 = worker['id'];
                               });
                             }
                           }
@@ -185,7 +199,9 @@ class _ShareState extends State<ShareWidget> {
                     },
                   ),
                 ),
-                onRefresh: () => reload(),
+                onRefresh: () {
+                  return reload();
+                },
               ),
               SizedBox(
                 height: 40,
@@ -259,67 +275,171 @@ class _ShareState extends State<ShareWidget> {
 
   Future<void> reload() async {
     try {
-      final url =
-          Uri.parse("http://192.168.1.159:8000/report/${widget.report_id + 1}");
-      final response = await http.post(url);
-      final body = response.bodyBytes;
-
-      final json = jsonDecode(utf8.decode(body)) as Map<String, dynamic>;
-
-      if (json['done_by'] != '0' && json['done_by2'] != '0') {
-        setState(() {
-          workers_select[int.parse(json['done_by']) - 1] = true;
-          share1 = int.parse(json['done_by']);
-
-          workers_select[int.parse(json['done_by2']) - 1] = true;
-          share2 = int.parse(json['done_by2']);
-        });
-      } else if (json['done_by'] != '0') {
-        setState(() {
-          workers_select[int.parse(json['done_by']) - 1] = true;
-          share1 = int.parse(json['done_by']);
-        });
-      } else if (json['done_by2'] != '0') {
-        setState(() {
-          workers_select[int.parse(json['done_by2']) - 1] = true;
-          share2 = int.parse(json['done_by2']);
-        });
-      }
-    } catch (e) {
-      print(e);
-    }
-    try {
-      final url = Uri.parse("http://192.168.1.159:8000/workers");
-      final response = await http.get(url);
-      final body = response.bodyBytes;
+      final url = Uri.parse("http://192.168.160.248:8000/workers");
+      final response2 = await http.get(url);
+      final body = response2.bodyBytes;
       final json = jsonDecode(utf8.decode(body));
       print(name.value);
       setState(() {
         workers = json;
+      });
+
+      final response1 = await http.post(
+          Uri.parse("http://192.168.160.248:8000/report/${widget.report_id}"));
+      final body1 = jsonDecode(response1.body);
+
+      workers.forEach((worker) {
+        print(worker['id']);
+
+        if (worker['id'].toString() == body1['done_by'].toString()) {
+          if (share1 == 0) {
+            setState(() {
+              share1 = worker['id'];
+            });
+          }
+        } else if (worker['id'].toString() == body1['done_by2'].toString()) {
+          if (share2 == 0) {
+            setState(() {
+              share2 = worker['id'];
+            });
+          }
+        } else if (worker['id'].toString() != body1['done_by'].toString() ||
+            worker['id'].toString() != body1['done_by2'].toString()) {}
       });
     } catch (e) {
       print(e);
     }
   }
 
+  /*Future<void> get_done_by_s() async {
+    try {
+      final url =
+          Uri.parse("http://192.168.160.248:8000/report/${widget.report_id}");
+      final response = await http.post(url);
+      final body = response.bodyBytes;
+
+      final json = jsonDecode(utf8.decode(body)) as Map<String, dynamic>;
+
+      if (json['done_by'] != '0' && json['done_by2'] != '0') {
+        if (worker['id'] == json['done_by']) {
+          setState(() {
+            workers_select[index] = true;
+            share1 = int.parse(json['done_by']);
+
+            workers_select[index] = true;
+            share2 = int.parse(json['done_by2']);
+          });
+          print(share1 + share2);
+        }
+        setState(() {});
+      } else if (json['done_by'] != '0') {
+        print(json['done_by']);
+        if (worker['id'] == json['done_by']) {
+          setState(() {
+            workers_select[index] = true;
+            share1 = int.parse(json['done_by']);
+          });
+          print(share1);
+        }
+      } else if (json['done_by2'] != '0') {
+        if (worker['id'] == json['done_by2']) {
+          setState(() {
+            workers_select = true;
+            share2 = int.parse(json['done_by2']);
+          });
+          print(share2);
+        }
+      }
+    } catch (e) {
+      print(e);
+    }
+  }*/
+
   Future<void> Share() async {
     if (share1 == 0 && share2 == 0) {
-      showDialog(
-        context: context,
-        builder: (context) => Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: MediaQuery.of(context).size.width - 80,
-              height: MediaQuery.of(context).size.width - 40,
-              child: False(text: "لم يتم اختيار أي شخص"),
-            ),
+      Future<bool> showAlertDialog(BuildContext context, String message) async {
+        // set up the buttons
+        Widget cancelButton = ElevatedButton(
+          child: Text(
+            "لا",
+            style: TextStyle(
+                fontFamily: 'font1', fontWeight: FontWeight.bold, fontSize: 16),
+          ),
+          onPressed: () {
+            // returnValue = false;
+            Navigator.of(context).pop(false);
+          },
+        );
+        Widget continueButton = ElevatedButton(
+          child: Text(
+            "نعم",
+            style: TextStyle(
+                fontFamily: 'font1',
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+                color: Colors.red),
+          ),
+          onPressed: () {
+            // returnValue = true;
+            Navigator.of(context).pop(true);
+          },
+        );
+        AlertDialog alert = AlertDialog(
+          title: Text(
+            "هل أنت متأكد؟",
+            textAlign: TextAlign.end,
+            style: TextStyle(
+                fontFamily: 'font1', fontWeight: FontWeight.bold, fontSize: 20),
+          ),
+          content: Text(
+            message,
+            textAlign: TextAlign.end,
+            style: TextStyle(
+                fontFamily: 'font1',
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: Colors.black38),
+          ),
+          actions: [
+            cancelButton,
+            continueButton,
           ],
-        ),
-      );
+        ); // show the dialog
+        final result = await showDialog<bool?>(
+          context: context,
+          builder: (BuildContext context) {
+            return alert;
+          },
+        );
+        return result ?? false;
+      }
+
+      showAlertDialog(context, "هل تريد إلغاء جميع التحويلات ؟")
+          .then((bool1) async {
+        if (bool1 == true) {
+          final request = await http.put(Uri.parse(
+              "http://192.168.160.248:8000/share/${widget.report_id}/${share1}/${share2}"));
+          if (request.statusCode == 200) {
+            Navigator.pop(context);
+            showDialog(
+              context: context,
+              builder: (context) => Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    width: MediaQuery.of(context).size.width - 80,
+                    height: MediaQuery.of(context).size.width - 40,
+                    child: True(text: "تم تحديث البيانات"),
+                  ),
+                ],
+              ),
+            );
+          }
+        }
+      });
     } else {
       final request = await http.put(Uri.parse(
-          "http://192.168.1.159:8000/share/${widget.report_id + 1}/${share1}/${share2}"));
+          "http://192.168.160.248:8000/share/${widget.report_id}/${share1}/${share2}"));
 
       if (request.statusCode == 200) {
         Navigator.pop(context);

@@ -1,11 +1,12 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 //import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
-
-import 'package:rjd_app/Screens/HomeScreen.dart';
-import 'package:rjd_app/Screens/admin/AdminHomeScreen.dart';
+import 'package:encrypt/encrypt.dart' as encrypt;
+import 'package:crypto/crypto.dart';
 import 'package:rjd_app/Screens/widgets/false.dart';
 import 'package:rjd_app/main.dart';
 
@@ -21,6 +22,10 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController floor_controller = TextEditingController(text: '');
   TextEditingController section_controller = TextEditingController(text: '');
   TextEditingController pass_controller = TextEditingController(text: '');
+  String floor_count = "0";
+  String section_count = "0";
+  String section_login_value = "";
+  List<DropdownMenuItem> items = [];
 
   @override
   Widget build(BuildContext context) {
@@ -242,29 +247,101 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     width: MediaQuery.of(context).size.width - 60,
                     height: 46,
-                    child: TextField(
-                      style: TextStyle(
-                        color: Colors.black.withOpacity(0.6499999761581421),
-                        fontSize: 14,
-                        fontFamily: 'font1',
-                        fontWeight: FontWeight.w700,
-                      ),
-                      textAlign: TextAlign.end,
-                      keyboardType: TextInputType.name,
-                      controller: floor_controller,
-                      decoration: InputDecoration(
-                          suffixIcon: Icon(
-                            Icons.format_list_numbered_rounded,
-                            size: 20.0,
-                          ),
-                          suffixIconColor:
-                              Colors.black.withOpacity(0.6499999761581421),
-                          hintText: 'الطابق',
-                          hintStyle: TextStyle(
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width - 150,
+                        ),
+                        DropdownButton(
+                          style: TextStyle(
                             color: Colors.black.withOpacity(0.6499999761581421),
+                            fontSize: 14,
+                            fontFamily: 'font1',
+                            fontWeight: FontWeight.w700,
                           ),
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.only(top: 10)),
+                          onChanged: (val) {
+                            setState(() {
+                              floor_count = val.toString();
+                            });
+                          },
+                          iconSize: 22.0,
+                          value: floor_count,
+                          icon: Icon(Icons.format_list_numbered_rounded),
+                          alignment: Alignment.centerRight,
+                          underline: SizedBox(
+                            height: 0,
+                          ),
+                          items: const [
+                            DropdownMenuItem(
+                              value: "0",
+                              alignment: Alignment.center,
+                              child: Text(
+                                " الطابق   ",
+                              ),
+                            ),
+                            DropdownMenuItem(
+                              value: "1",
+                              child: Text(
+                                "1 ",
+                              ),
+                            ),
+                            DropdownMenuItem(
+                              value: "2",
+                              child: Text(
+                                "2",
+                              ),
+                            ),
+                            DropdownMenuItem(
+                              value: "3",
+                              child: Text(
+                                "3 ",
+                              ),
+                            ),
+                            DropdownMenuItem(
+                              value: "4",
+                              child: Text(
+                                "4 ",
+                              ),
+                            ),
+                            DropdownMenuItem(
+                              value: "5",
+                              child: Text(
+                                "5 ",
+                              ),
+                            ),
+                            DropdownMenuItem(
+                              value: "6",
+                              child: Text(
+                                "6 ",
+                              ),
+                            ),
+                            DropdownMenuItem(
+                              value: "7",
+                              child: Text(
+                                "7 ",
+                              ),
+                            ),
+                            DropdownMenuItem(
+                              value: "8",
+                              child: Text(
+                                "8 ",
+                              ),
+                            ),
+                            DropdownMenuItem(
+                              value: "9",
+                              child: Text(
+                                "9 ",
+                              ),
+                            ),
+                            DropdownMenuItem(
+                              value: "10",
+                              child: Text(
+                                "10 ",
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   )
                 ],
@@ -292,32 +369,33 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     width: MediaQuery.of(context).size.width - 60,
                     height: 46,
-                    child: TextField(
-                      style: TextStyle(
-                        color: Colors.black.withOpacity(0.6499999761581421),
-                        fontSize: 14,
-                        fontFamily: 'font1',
-                        fontWeight: FontWeight.w700,
-                      ),
-                      textAlign: TextAlign.right,
-                      keyboardType: TextInputType.streetAddress,
-                      controller: section_controller,
-                      decoration: InputDecoration(
-                          suffixIcon: Icon(
-                            Icons.border_inner_rounded,
-                            size: 20.0,
-                          ),
-                          suffixIconColor:
-                              Colors.black.withOpacity(0.6499999761581421),
-                          hintText: 'القسم',
-                          hintStyle: TextStyle(
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width - 146,
+                        ),
+                        DropdownButton(
+                          icon: Icon(Icons.border_inner_rounded),
+                          style: TextStyle(
                             color: Colors.black.withOpacity(0.6499999761581421),
                             fontSize: 14,
                             fontFamily: 'font1',
                             fontWeight: FontWeight.w700,
                           ),
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.only(top: 10)),
+                          iconSize: 22.0,
+                          value: section_count,
+                          onChanged: (new_val) {
+                            setState(() {
+                              section_count = new_val!;
+                            });
+                            print(section_count);
+                          },
+                          underline: SizedBox(
+                            height: 0,
+                          ),
+                          items: items,
+                        ),
+                      ],
                     ),
                   )
                 ],
@@ -418,7 +496,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 40,
               ),
             ],
@@ -428,13 +506,47 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  Future<void> fetching_sections() async {
+    print("here");
+    final request = await http.post(Uri.parse(
+        "http://192.168.160.248:8000/sections/${floor_count.toString()}"));
+    if (request.statusCode == 200) {
+      List<dynamic> list1 = jsonDecode(utf8.decode(request.bodyBytes));
+      print(list1);
+      setState(() {
+        list1.forEach((section) {
+          var let = DropdownMenuItem(
+            child: Text(section['name']),
+            value: (section['id']).toString(),
+          );
+          return items.add(let);
+        });
+      });
+    }
+  }
+
+  final key = encrypt.Key.fromUtf8('#1bir.admin.hash.bir.admin.hash#');
+
+  final iv = encrypt.IV.fromUtf8('#1bir.admin.app#');
+
+  // Function to encrypt the password
+  String encryptPassword(String password) {
+    final encrypter = encrypt.Encrypter(encrypt.AES(key,
+        mode: encrypt.AESMode.cbc)); // CBC mode with default PKCS7 padding
+    final encrypted = encrypter.encrypt(password, iv: iv);
+    return encrypted.base64;
+  }
+
   Future<void> Login() async {
     if (name_controller.text.isNotEmpty &&
-        floor_controller.text.isNotEmpty &&
+        floor_count != "0" &&
         section_controller.text.isNotEmpty &&
         pass_controller.text.isNotEmpty) {
+      final password = pass_controller.text;
+
+      final encryptedPassword = encryptPassword(password);
       final response = await http.post(
-        Uri.parse("http://192.168.1.159:8000/login"),
+        Uri.parse("http://192.168.160.248:8000/login"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           "Access-Control-Allow-Origin": "*",
@@ -443,9 +555,9 @@ class _LoginScreenState extends State<LoginScreen> {
         body: jsonEncode(
           <String, String>{
             'username': name_controller.text,
-            'floor': floor_controller.text,
+            'floor': floor_count,
             'section': section_controller.text,
-            'password': pass_controller.text,
+            'password': encryptedPassword,
             'worker': "false",
             'admin': admin(),
           },
@@ -474,6 +586,7 @@ class _LoginScreenState extends State<LoginScreen> {
         section.value = section_controller.text;
         floor.value = floor_controller.text;
         admin1.value = admin();
+        worker.value = result['worker'];
 
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => MyApp()));
