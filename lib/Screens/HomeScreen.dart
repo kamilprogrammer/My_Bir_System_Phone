@@ -144,7 +144,7 @@ class _HomescreenState extends State<Homescreen> {
     print(user_id.value);
     try {
       final url =
-          Uri.parse("http://192.168.160.248:8000/reports/${user_id.value}");
+          Uri.parse("http://192.168.1.169:8000/reports/${user_id.value}");
       final response = await http.post(url);
       final body = response.bodyBytes;
       final json = jsonDecode(utf8.decode(body));

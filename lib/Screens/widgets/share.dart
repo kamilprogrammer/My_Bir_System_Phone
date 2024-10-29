@@ -275,7 +275,7 @@ class _ShareState extends State<ShareWidget> {
 
   Future<void> reload() async {
     try {
-      final url = Uri.parse("http://192.168.160.248:8000/workers");
+      final url = Uri.parse("http://192.168.1.169:8000/workers");
       final response2 = await http.get(url);
       final body = response2.bodyBytes;
       final json = jsonDecode(utf8.decode(body));
@@ -285,7 +285,7 @@ class _ShareState extends State<ShareWidget> {
       });
 
       final response1 = await http.post(
-          Uri.parse("http://192.168.160.248:8000/report/${widget.report_id}"));
+          Uri.parse("http://192.168.1.169:8000/report/${widget.report_id}"));
       final body1 = jsonDecode(response1.body);
 
       workers.forEach((worker) {
@@ -314,7 +314,7 @@ class _ShareState extends State<ShareWidget> {
   /*Future<void> get_done_by_s() async {
     try {
       final url =
-          Uri.parse("http://192.168.160.248:8000/report/${widget.report_id}");
+          Uri.parse("http://192.168.1.169:8000/report/${widget.report_id}");
       final response = await http.post(url);
       final body = response.bodyBytes;
 
@@ -418,7 +418,7 @@ class _ShareState extends State<ShareWidget> {
           .then((bool1) async {
         if (bool1 == true) {
           final request = await http.put(Uri.parse(
-              "http://192.168.160.248:8000/share/${widget.report_id}/${share1}/${share2}"));
+              "http://192.168.1.169:8000/share/${widget.report_id}/${share1}/${share2}"));
           if (request.statusCode == 200) {
             Navigator.pop(context);
             showDialog(
@@ -439,7 +439,7 @@ class _ShareState extends State<ShareWidget> {
       });
     } else {
       final request = await http.put(Uri.parse(
-          "http://192.168.160.248:8000/share/${widget.report_id}/${share1}/${share2}"));
+          "http://192.168.1.169:8000/share/${widget.report_id}/${share1}/${share2}"));
 
       if (request.statusCode == 200) {
         Navigator.pop(context);

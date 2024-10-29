@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+
 import 'package:rjd_app/Screens/AboutScreen.dart';
 
 import 'package:rjd_app/Screens/HomeScreen.dart';
@@ -14,6 +15,7 @@ import 'package:localstorage/localstorage.dart';
 import 'package:rjd_app/Screens/widgets/Drawer.dart';
 import 'package:rjd_app/Screens/widgets/false.dart';
 import 'package:rjd_app/Screens/widgets/true.dart';
+import 'package:nfc_manager/nfc_manager.dart';
 
 late final ValueNotifier<String> user_id;
 late final ValueNotifier<String> name;
@@ -79,7 +81,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Future<void> updatelocal() async {
     final response = await http
-        .post(Uri.parse("http://192.168.160.248:8000/user/${user_id.value}"));
+        .post(Uri.parse("http://192.168.1.169:8000/user/${user_id.value}"));
 
     if (response.statusCode == 200) {
       final result =
@@ -104,7 +106,7 @@ class _MyAppState extends State<MyApp> {
           ],
         ),
       );
-      Future.delayed(const Duration(seconds: 5)).then((val) {
+      Future.delayed(const Duration(seconds: 3)).then((val) {
         exit(0);
       });
     }
@@ -147,6 +149,46 @@ class Starter extends StatefulWidget {
 }
 
 class _StarterState extends State<Starter> {
+  ValueNotifier<dynamic> result = ValueNotifier(null);
+
+  @override
+  void initState() {
+    super.initState();
+    NfcManager.instance.isAvailable().then((value) {
+      print('NFC is available: $value');
+    });
+  }
+
+  Future<void> _startNFC() async {
+    print("kmr");
+    NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
+      var ndef = Ndef.from(tag);
+      NdefMessage? message1 = await ndef!.read();
+      NdefRecord record1 = message1.records[0];
+      print(utf8.decode(record1.payload));
+      result.value = tag.data;
+      if (record1.payload.isNotEmpty) {
+        showDialog(
+          context: context,
+          builder: (context) => Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                  width: MediaQuery.of(context).size.width - 80,
+                  height: MediaQuery.of(context).size.width - 40,
+                  child: True(text: "تم التقاط البطاقة")),
+            ],
+          ),
+        );
+      }
+
+      NfcManager.instance.stopSession();
+
+      //print(result.value);
+      print("kmr ------------------------");
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -238,7 +280,7 @@ class _StarterState extends State<Starter> {
                       MaterialPageRoute(builder: (context) => LoginScreen()));
                 },
                 child: Text(
-                  'التالي',
+                  'تسجيل/إنشاء',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.white,
@@ -250,7 +292,7 @@ class _StarterState extends State<Starter> {
               ),
             ),
             SizedBox(
-              height: 100,
+              height: 30,
             ),
           ],
         ),
