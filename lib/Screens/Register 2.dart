@@ -8,14 +8,10 @@ import 'package:network_info_plus/network_info_plus.dart';
 import 'package:rjd_app/Screens/widgets/false.dart';
 import 'package:rjd_app/main.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 import 'package:encrypt/encrypt.dart' as encrypt;
-import 'package:crypto/crypto.dart';
-import 'package:rjd_app/Screens/widgets/false.dart';
-import 'package:rjd_app/main.dart';
 
-class LoginScreen2 extends StatefulWidget {
-  const LoginScreen2({
+class RegisterScreen2 extends StatefulWidget {
+  const RegisterScreen2({
     super.key,
     required this.name_controller,
     required this.floor_controller,
@@ -27,15 +23,16 @@ class LoginScreen2 extends StatefulWidget {
 
   @override
   @override
-  State<LoginScreen2> createState() => _LoginScreen2State();
+  State<RegisterScreen2> createState() => _RegisterScreen2State();
 }
 
-class _LoginScreen2State extends State<LoginScreen2> {
+class _RegisterScreen2State extends State<RegisterScreen2> {
   TextEditingController section_controller = TextEditingController(text: '');
   TextEditingController pass_controller = TextEditingController(text: '');
   String section_count = "0";
   String section_login_value = "";
   List<DropdownMenuItem<String>> sections = [];
+  @override
   void initState() {
     super.initState();
     fetching_sections();
@@ -43,8 +40,9 @@ class _LoginScreen2State extends State<LoginScreen2> {
 
   @override
   Widget build(BuildContext context) {
+    final _formSearchProductsKey = GlobalKey<FormState>();
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-    return new PopScope(
+    return PopScope(
       canPop: false,
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -52,13 +50,13 @@ class _LoginScreen2State extends State<LoginScreen2> {
           body: SingleChildScrollView(
             child: Column(
               children: [
-                Container(
+                SizedBox(
                   width: double.infinity,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Container(
-                        padding: EdgeInsets.only(left: 80),
+                        padding: const EdgeInsets.only(left: 80),
                         width: MediaQuery.of(context).size.width > 375
                             ? MediaQuery.of(context).size.width * 50 / 100
                             : MediaQuery.of(context).size.width * 60 / 100,
@@ -76,7 +74,7 @@ class _LoginScreen2State extends State<LoginScreen2> {
                                   width: 184,
                                   height: 106,
                                   decoration: ShapeDecoration(
-                                    color: Color(0xFF2B3185),
+                                    color: const Color(0xFF2B3185),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(40),
                                     ),
@@ -90,7 +88,7 @@ class _LoginScreen2State extends State<LoginScreen2> {
                               child: Container(
                                 width: 182,
                                 height: 182,
-                                decoration: ShapeDecoration(
+                                decoration: const ShapeDecoration(
                                   color: Color(0xFFD4D3F7),
                                   shape: StarBorder.polygon(sides: 3),
                                 ),
@@ -103,7 +101,7 @@ class _LoginScreen2State extends State<LoginScreen2> {
                                 transform: Matrix4.identity()
                                   ..translate(0.0, 0.0)
                                   ..rotateZ(3.14),
-                                child: Container(
+                                child: SizedBox(
                                   width: 212.18,
                                   height: 276,
                                   child: Stack(
@@ -119,7 +117,7 @@ class _LoginScreen2State extends State<LoginScreen2> {
                                             width: 184,
                                             height: 106,
                                             decoration: ShapeDecoration(
-                                              color: Color(0xFF77C9DB),
+                                              color: const Color(0xFF77C9DB),
                                               shape: RoundedRectangleBorder(
                                                 borderRadius:
                                                     BorderRadius.circular(40),
@@ -138,9 +136,10 @@ class _LoginScreen2State extends State<LoginScreen2> {
                                           child: Container(
                                             width: 182,
                                             height: 182,
-                                            decoration: ShapeDecoration(
+                                            decoration: const ShapeDecoration(
                                               color: Color(0xCE90F8FF),
-                                              shape: StarBorder.polygon(sides: 3),
+                                              shape:
+                                                  StarBorder.polygon(sides: 3),
                                             ),
                                           ),
                                         ),
@@ -160,8 +159,8 @@ class _LoginScreen2State extends State<LoginScreen2> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Container(
-                      margin: EdgeInsets.only(right: 40),
-                      child: Text(
+                      margin: const EdgeInsets.only(right: 40),
+                      child: const Text(
                         'إكمال التسجيل',
                         style: TextStyle(
                           color: Colors.black,
@@ -177,7 +176,7 @@ class _LoginScreen2State extends State<LoginScreen2> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Container(
-                      margin: EdgeInsets.only(right: 40, top: 0),
+                      margin: const EdgeInsets.only(right: 40, top: 0),
                       child: Text(
                         'الرجاء إدخال البيانات المتبقية',
                         style: TextStyle(
@@ -190,7 +189,7 @@ class _LoginScreen2State extends State<LoginScreen2> {
                     ),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 30,
                 ),
                 Row(
@@ -202,7 +201,7 @@ class _LoginScreen2State extends State<LoginScreen2> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        shadows: [
+                        shadows: const [
                           BoxShadow(
                             color: Color(0x3F000000),
                             blurRadius: 12,
@@ -222,7 +221,7 @@ class _LoginScreen2State extends State<LoginScreen2> {
                           ),
                           sections.length != 1
                               ? DropdownButton(
-                                  icon: Icon(Icons.border_inner_rounded),
+                                  icon: const Icon(Icons.border_inner_rounded),
                                   style: TextStyle(
                                     color: Colors.black
                                         .withOpacity(0.6499999761581421),
@@ -232,18 +231,18 @@ class _LoginScreen2State extends State<LoginScreen2> {
                                   ),
                                   iconSize: 22.0,
                                   value: section_count,
-                                  onChanged: (new_val) {
+                                  onChanged: (newVal) {
                                     setState(() {
-                                      section_count = new_val!;
+                                      section_count = newVal!;
                                     });
                                     print(section_count);
                                   },
-                                  underline: SizedBox(
+                                  underline: const SizedBox(
                                     height: 0,
                                   ),
                                   items: sections,
                                 )
-                              : Row(
+                              : const Row(
                                   children: [
                                     Text(
                                       "حدث خطأ ما",
@@ -267,7 +266,7 @@ class _LoginScreen2State extends State<LoginScreen2> {
                     )
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 16,
                 ),
                 Row(
@@ -279,7 +278,7 @@ class _LoginScreen2State extends State<LoginScreen2> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        shadows: [
+                        shadows: const [
                           BoxShadow(
                             color: Color(0x3F000000),
                             blurRadius: 12,
@@ -290,7 +289,8 @@ class _LoginScreen2State extends State<LoginScreen2> {
                       ),
                       width: MediaQuery.of(context).size.width - 60,
                       height: 46,
-                      child: TextField(
+                      child: TextFormField(
+                        textInputAction: TextInputAction.done,
                         style: TextStyle(
                           color: Colors.black.withOpacity(0.6499999761581421),
                           fontSize: 14,
@@ -302,7 +302,7 @@ class _LoginScreen2State extends State<LoginScreen2> {
                         keyboardType: TextInputType.visiblePassword,
                         controller: pass_controller,
                         decoration: InputDecoration(
-                            suffixIcon: Icon(
+                            suffixIcon: const Icon(
                               Icons.lock_outline_rounded,
                               size: 20.0,
                             ),
@@ -310,74 +310,126 @@ class _LoginScreen2State extends State<LoginScreen2> {
                                 Colors.black.withOpacity(0.6499999761581421),
                             hintText: 'كلمة السر',
                             hintStyle: TextStyle(
-                              color: Colors.black.withOpacity(0.6499999761581421),
+                              color:
+                                  Colors.black.withOpacity(0.6499999761581421),
                               fontSize: 14,
                               fontFamily: 'font1',
                               fontWeight: FontWeight.w700,
                             ),
                             border: InputBorder.none,
-                            contentPadding: EdgeInsets.only(top: 10)),
+                            contentPadding: const EdgeInsets.only(top: 10)),
                       ),
                     )
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 40,
                 ),
-                sections.isNotEmpty
-                    ? TextButton(
+                sections.length != 1
+                    ? Column(
+                        children: [
+                          TextButton(
+                            onPressed: () async {
+                              await Register(deviceInfo);
+                            },
+                            child: Container(
+                              width: MediaQuery.of(context).size.width - 160,
+                              height: 55,
+                              clipBehavior: Clip.antiAlias,
+                              decoration: ShapeDecoration(
+                                color: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  side: const BorderSide(
+                                      width: 2.0, color: Color(0xFF2B3185)),
+                                  borderRadius: BorderRadius.circular(19),
+                                ),
+                                shadows: const [
+                                  BoxShadow(
+                                    color: Color(0xFF2B3185),
+                                    blurRadius: 14,
+                                    offset: Offset(0, 0),
+                                    spreadRadius: 1,
+                                  )
+                                ],
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    child: const Text(
+                                      'إنشاء الحساب',
+                                      style: TextStyle(
+                                        color: Color(0xFF2B3185),
+                                        fontSize: 16,
+                                        fontFamily: 'font1',
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () async {
+                              Navigator.pop(context);
+                            },
+                            child: Container(
+                              width: MediaQuery.of(context).size.width - 200,
+                              height: 55,
+                              clipBehavior: Clip.antiAlias,
+                              decoration: ShapeDecoration(
+                                color: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  side: const BorderSide(
+                                      width: 2.0, color: Color(0xFF2B3185)),
+                                  borderRadius: BorderRadius.circular(19),
+                                ),
+                                shadows: const [
+                                  BoxShadow(
+                                    color: Color(0xFF2B3185),
+                                    blurRadius: 14,
+                                    offset: Offset(0, 0),
+                                    spreadRadius: 1,
+                                  )
+                                ],
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    child: const Text(
+                                      'العودة',
+                                      style: TextStyle(
+                                        color: Color(0xFF2B3185),
+                                        fontSize: 16,
+                                        fontFamily: 'font1',
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+                    : TextButton(
                         onPressed: () async {
-                          await Login().then((onValue) async {
-                            if (kIsWeb) {
-                              print("web");
-                            } else {
-                              if (Platform.operatingSystem == "android") {
-                                final info = NetworkInfo();
-                                AndroidDeviceInfo androidInfo =
-                                    await deviceInfo.androidInfo;
-                                final wifi_gateway =
-                                    await info.getWifiGatewayIP();
-                                final wifi_name = await info.getWifiName();
-      
-                                final wifi_ip = await info.getWifiIP();
-                                final wifi_mask = await info.getWifiSubmask();
-      
-                                final json = {
-                                  "os": "${Platform.operatingSystem}",
-                                  "model": "${androidInfo.model}",
-                                  "version": "${Platform.operatingSystemVersion}",
-                                  "cpu": "${androidInfo.supportedAbis}",
-                                  "cpu_cores": "${Platform.numberOfProcessors}",
-                                  "wifi": "${wifi_name}",
-                                  "wifi_ip": "${wifi_ip}",
-                                  "wifi_gateway": "${wifi_gateway}",
-                                  "wifi_sub": "${wifi_mask}",
-                                };
-                                print(json);
-                                final response_phone = await http.post(
-                                  Uri.parse(
-                                      "http://192.168.1.169:8000/phone?name=${name.value}&json=${json.toString()}"),
-                                  body: {
-                                    'name': "name.value.toString()",
-                                    'json': "json.toString()"
-                                  },
-                                );
-                              }
-                            }
-                          });
+                          Navigator.pop(context);
                         },
                         child: Container(
-                          width: MediaQuery.of(context).size.width - 160,
+                          width: MediaQuery.of(context).size.width - 200,
                           height: 55,
                           clipBehavior: Clip.antiAlias,
                           decoration: ShapeDecoration(
                             color: Colors.white,
                             shape: RoundedRectangleBorder(
-                              side: BorderSide(
+                              side: const BorderSide(
                                   width: 2.0, color: Color(0xFF2B3185)),
                               borderRadius: BorderRadius.circular(19),
                             ),
-                            shadows: [
+                            shadows: const [
                               BoxShadow(
                                 color: Color(0xFF2B3185),
                                 blurRadius: 14,
@@ -391,7 +443,7 @@ class _LoginScreen2State extends State<LoginScreen2> {
                             children: [
                               Container(
                                 child: const Text(
-                                  'إنشاء/تسجيل',
+                                  'العودة',
                                   style: TextStyle(
                                     color: Color(0xFF2B3185),
                                     fontSize: 16,
@@ -403,9 +455,6 @@ class _LoginScreen2State extends State<LoginScreen2> {
                             ],
                           ),
                         ),
-                      )
-                    : SizedBox(
-                        height: 0,
                       ),
               ],
             ),
@@ -418,20 +467,20 @@ class _LoginScreen2State extends State<LoginScreen2> {
   Future<void> fetching_sections() async {
     print("here");
     final request = await http.post(Uri.parse(
-        "http://192.168.1.169:8000/sections/${widget.floor_controller.toString()}"));
+        "http://172.20.121.203:8000/sections/${widget.floor_controller.toString()}"));
     if (request.statusCode == 200) {
       List<dynamic> list1 = jsonDecode(utf8.decode(request.bodyBytes));
       print(list1);
       setState(() {
         sections = list1.map((section) {
           return DropdownMenuItem<String>(
-            child: Text(section['name'].toString()),
             value: section['name'].toString(),
+            child: Text(section['name'].toString()),
           );
         }).toList();
-        sections.add(DropdownMenuItem(
-          child: Text("القسم"),
+        sections.add(const DropdownMenuItem(
           value: "0",
+          child: Text("القسم"),
         ));
       });
     }
@@ -449,16 +498,17 @@ class _LoginScreen2State extends State<LoginScreen2> {
     return encrypted.base64;
   }
 
-  Future<void> Login() async {
+  Future<void> Register(deviceInfo) async {
     if (widget.name_controller.isNotEmpty &&
         widget.floor_controller != "0" &&
-        section_count.isNotEmpty &&
-        pass_controller.text.isNotEmpty) {
+        section_count != "0" &&
+        pass_controller.text.isNotEmpty &&
+        pass_controller.text.length > 8) {
       final password = pass_controller.text;
 
       final encryptedPassword = encryptPassword(password);
       final response = await http.post(
-        Uri.parse("http://192.168.1.169:8000/login"),
+        Uri.parse("http://172.20.121.203:8000/register"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           "Access-Control-Allow-Origin": "*",
@@ -476,16 +526,18 @@ class _LoginScreen2State extends State<LoginScreen2> {
         ),
       );
 
-      if (response.body == 203.toString()) {
+      if (response.statusCode == 203) {
         showDialog(
           context: context,
           builder: (context) => Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
+              SizedBox(
                 width: MediaQuery.of(context).size.width - 80,
                 height: MediaQuery.of(context).size.width - 40,
-                child: False(text: "الباسوورد غير مطابق للحساب السابق"),
+                child: const False(
+                    text:
+                        "هذا الحساب موجود مسبقاً الرجاء العودة لتسجيل الدخول"),
               ),
             ],
           ),
@@ -499,24 +551,70 @@ class _LoginScreen2State extends State<LoginScreen2> {
         floor.value = widget.floor_controller;
         admin1.value = admin();
         worker.value = result['worker'];
+        if (kIsWeb) {
+          print("web");
+        } else {
+          if (Platform.operatingSystem == "android") {
+            final info = NetworkInfo();
+            AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+            final wifiGateway = await info.getWifiGatewayIP();
+            final wifiName = await info.getWifiName();
 
+            final wifiIp = await info.getWifiIP();
+            final wifiMask = await info.getWifiSubmask();
+
+            final json = {
+              "os": Platform.operatingSystem,
+              "model": androidInfo.model,
+              "version": Platform.operatingSystemVersion,
+              "cpu": "${androidInfo.supportedAbis}",
+              "cpu_cores": "${Platform.numberOfProcessors}",
+              "wifi": "$wifiName",
+              "wifi_ip": "$wifiIp",
+              "wifi_gateway": "$wifiGateway",
+              "wifi_sub": "$wifiMask",
+            };
+            print(json);
+            final responsePhone = await http.post(
+              Uri.parse(
+                  "http://172.20.121.203:8000/phone?name=${name.value}&json=${json.toString()}"),
+              body: {
+                'name': "name.value.toString()",
+                'json': "json.toString()"
+              },
+            );
+          }
+        }
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => MyApp()));
+            context, MaterialPageRoute(builder: (context) => const MyApp()));
       } else {
         showDialog(
           context: context,
           builder: (context) => Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
+              SizedBox(
                 width: MediaQuery.of(context).size.width - 80,
                 height: MediaQuery.of(context).size.width - 40,
-                child: False(text: "حدث خطأ ما"),
+                child: const False(text: "حدث خطأ ما"),
               ),
             ],
           ),
         );
       }
+    } else {
+      showDialog(
+        context: context,
+        builder: (context) => Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+                width: MediaQuery.of(context).size.width - 80,
+                height: MediaQuery.of(context).size.width - 40,
+                child: const False(text: "الرجاء ملء جميع الحقول")),
+          ],
+        ),
+      );
     }
   }
 

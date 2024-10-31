@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:rjd_app/Screens/widgets/Drawer.dart';
 import 'package:rjd_app/Screens/widgets/User.dart';
 import 'package:rjd_app/Screens/widgets/false.dart';
@@ -28,6 +29,7 @@ class _UsersState extends State<Users> {
     fetchUsers();
   }
 
+  @override
   Widget build(BuildContext context) {
     // Use a fixed 32-character key for 256-bit AES (must be exactly 32 characters long)
     final key = encrypt.Key.fromUtf8('#1bir.admin.hash.bir.admin.hash#');
@@ -42,404 +44,81 @@ class _UsersState extends State<Users> {
     }
 
     return admin1.value == 'true'
-        ? Scaffold(
-            drawer: MyDrawer(),
-            appBar: AppBar(
-              toolbarHeight: 50.0,
-              title: Text(
-                "جميع الحسابات",
-                style: TextStyle(
-                    fontFamily: 'font1',
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18.0),
-              ),
-              centerTitle: true,
-              leading: Builder(builder: (context) {
-                return IconButton(
-                  onPressed: () {
-                    Scaffold.of(context).openDrawer();
-                  },
-                  icon: Icon(Icons.menu),
-                );
-              }),
-            ),
-            body: SingleChildScrollView(
-              child: Container(
-                constraints: BoxConstraints(
-                    minHeight: MediaQuery.of(context).size.height),
-                width: MediaQuery.of(context).size.width,
-                clipBehavior: Clip.antiAlias,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment(0.21, 0.98),
-                    end: Alignment(-0.21, -0.98),
-                    colors: [
-                      Color(0xFF17161C),
-                      Color(0xFF323751),
-                      Color(0x6F3949A1),
-                      Color(0x000026FF)
-                    ],
-                  ),
+        ? PopScope(
+            canPop: false,
+            child: Scaffold(
+              drawer: const MyDrawer(),
+              appBar: AppBar(
+                toolbarHeight: 50.0,
+                title: const Text(
+                  "جميع الحسابات",
+                  style: TextStyle(
+                      fontFamily: 'font1',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18.0),
                 ),
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      ConstrainedBox(
-                        constraints: BoxConstraints(
-                            maxHeight:
-                                MediaQuery.of(context).size.height * 0.5),
-                        child: Container(
-                          height: users.length * 90,
-                          child: ConstrainedBox(
-                            constraints: BoxConstraints(
-                                maxHeight:
-                                    MediaQuery.of(context).size.height - 180),
-                            child: RefreshIndicator(
-                              onRefresh: fetchUsers,
-                              color: Colors.blueAccent,
-                              child: ListView.separated(
-                                separatorBuilder: (context, index) =>
-                                    const SizedBox(
-                                  height: 6,
-                                ),
-                                itemCount: users.length,
-                                itemBuilder: (context, index) {
-                                  final user = users[index];
-                                  Future Update_worker(
-                                      int status, String worker) async {
-                                    if (name.value == user['username']) {
-                                      showDialog(
-                                        context: context,
-                                        builder: (context) => Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Container(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width -
-                                                  80,
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .width -
-                                                  40,
-                                              child: False(
-                                                  text:
-                                                      "لا يمكن تعديل بيانات الحساب الحالي"),
-                                            ),
-                                          ],
-                                        ),
-                                      );
-                                      fetchUsers();
-                                    } else {
-                                      if (worker == "false") {
-                                        final updated_user = users[status];
-
-                                        final real_index = updated_user['id'];
-                                        final req = await http.put(Uri.parse(
-                                            "http://192.168.1.169:8000/worker/${real_index}"));
-
-                                        if (req.statusCode == 200) {
-                                          Future.delayed(Duration(seconds: 2),
-                                              () {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        Users()));
-                                          });
-                                          showDialog(
-                                            context: context,
-                                            builder: (context) => Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width -
-                                                      80,
-                                                  height: MediaQuery.of(context)
-                                                          .size
-                                                          .width -
-                                                      40,
-                                                  child: True(
-                                                      text:
-                                                          "تم تحديث البيانات"),
-                                                ),
-                                              ],
-                                            ),
-                                          );
-                                        } else {
-                                          showDialog(
-                                            context: context,
-                                            builder: (context) => Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width -
-                                                      80,
-                                                  height: MediaQuery.of(context)
-                                                          .size
-                                                          .width -
-                                                      40,
-                                                  child:
-                                                      False(text: "حدث خطأ ما"),
-                                                ),
-                                              ],
-                                            ),
-                                          );
-                                        }
-                                      } else {
-                                        final updated_user = users[status];
-                                        print("asas");
-                                        final real_index = updated_user['id'];
-                                        final req = await http.put(Uri.parse(
-                                            "http://192.168.1.169:8000/not_worker/${real_index}"));
-                                        final req2 = await http.put(Uri.parse(
-                                            "http://192.168.1.169:8000/not_admin/${real_index}"));
-
-                                        if (req.statusCode == 200 &&
-                                            req2.statusCode == 200) {
-                                          Future.delayed(Duration(seconds: 2),
-                                              () {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        Users()));
-                                          });
-                                          showDialog(
-                                            context: context,
-                                            builder: (context) => Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width -
-                                                      80,
-                                                  height: MediaQuery.of(context)
-                                                          .size
-                                                          .width -
-                                                      40,
-                                                  child: True(
-                                                      text:
-                                                          "تم تحديث البيانات"),
-                                                ),
-                                              ],
-                                            ),
-                                          );
-                                          fetchUsers();
-                                        } else {
-                                          showDialog(
-                                            context: context,
-                                            builder: (context) => Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width -
-                                                      80,
-                                                  height: MediaQuery.of(context)
-                                                          .size
-                                                          .width -
-                                                      40,
-                                                  child:
-                                                      False(text: "حدث خطأ ما"),
-                                                ),
-                                              ],
-                                            ),
-                                          );
-                                        }
-                                      }
-                                    }
-                                  }
-
-                                  Future Update(
-                                      int status, String admin) async {
-                                    if (name.value == user['username']) {
-                                      showDialog(
-                                        context: context,
-                                        builder: (context) => Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Container(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width -
-                                                  80,
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .width -
-                                                  40,
-                                              child: False(
-                                                  text:
-                                                      "لا يمكن تعديل بيانات الحساب الحالي"),
-                                            ),
-                                          ],
-                                        ),
-                                      );
-                                      fetchUsers();
-                                    } else {
-                                      if (admin == "false") {
-                                        print('false');
-                                        final updated_user = users[status];
-                                        print("asas");
-                                        final real_index = updated_user['id'];
-                                        final req = await http.put(Uri.parse(
-                                            "http://192.168.1.169:8000/admin/${real_index}"));
-
-                                        if (req.statusCode == 200) {
-                                          Future.delayed(Duration(seconds: 2),
-                                              () {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        Users()));
-                                          });
-                                          showDialog(
-                                            context: context,
-                                            builder: (context) => Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width -
-                                                      80,
-                                                  height: MediaQuery.of(context)
-                                                          .size
-                                                          .width -
-                                                      40,
-                                                  child: True(
-                                                      text:
-                                                          "تم تحديث البيانات"),
-                                                ),
-                                              ],
-                                            ),
-                                          );
-                                        } else {
-                                          showDialog(
-                                            context: context,
-                                            builder: (context) => Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width -
-                                                      80,
-                                                  height: MediaQuery.of(context)
-                                                          .size
-                                                          .width -
-                                                      40,
-                                                  child:
-                                                      False(text: "حدث خطأ ما"),
-                                                ),
-                                              ],
-                                            ),
-                                          );
-                                        }
-                                      } else {
-                                        print('true');
-                                        final updated_user = users[status];
-                                        print("asas");
-                                        final real_index = updated_user['id'];
-                                        final req = await http.put(Uri.parse(
-                                            "http://192.168.1.169:8000/not_admin/${real_index}"));
-                                        final req2 = await http.put(Uri.parse(
-                                            "http://192.168.1.169:8000/not_worker/${real_index}"));
-
-                                        if (req.statusCode == 200 &&
-                                            req2.statusCode == 200) {
-                                          Future.delayed(Duration(seconds: 2),
-                                              () {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        Users()));
-                                          });
-                                          showDialog(
-                                            context: context,
-                                            builder: (context) => Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width -
-                                                      80,
-                                                  height: MediaQuery.of(context)
-                                                          .size
-                                                          .width -
-                                                      40,
-                                                  child: True(
-                                                      text:
-                                                          "تم تحديث البيانات"),
-                                                ),
-                                              ],
-                                            ),
-                                          );
-                                          fetchUsers();
-                                        } else {
-                                          showDialog(
-                                            context: context,
-                                            builder: (context) => Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width -
-                                                      80,
-                                                  height: MediaQuery.of(context)
-                                                          .size
-                                                          .width -
-                                                      40,
-                                                  child:
-                                                      False(text: "حدث خطأ ما"),
-                                                ),
-                                              ],
-                                            ),
-                                          );
-                                        }
-                                      }
-                                    }
-                                  }
-
-                                  Delete(int status) async {
-                                    final response = await http.post(Uri.parse(
-                                        "http://192.168.1.169:8000/user/${user_id.value}"));
-
-                                    if (response.statusCode == 200) {
-                                      final result = jsonDecode(
-                                              utf8.decode(response.bodyBytes))
-                                          as Map<String, dynamic>;
-                                      print(result['username']);
-                                      print(user['username']);
-                                      if (result['username'] ==
-                                          user['username']) {
+                centerTitle: true,
+                leading: Builder(builder: (context) {
+                  return IconButton(
+                    onPressed: () {
+                      Scaffold.of(context).openDrawer();
+                    },
+                    icon: const Icon(Icons.menu),
+                  );
+                }),
+              ),
+              body: SingleChildScrollView(
+                child: Container(
+                  constraints: BoxConstraints(
+                      minHeight: MediaQuery.of(context).size.height),
+                  width: MediaQuery.of(context).size.width,
+                  clipBehavior: Clip.antiAlias,
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment(0.21, 0.98),
+                      end: Alignment(-0.21, -0.98),
+                      colors: [
+                        Color(0xFF17161C),
+                        Color(0xFF323751),
+                        Color(0x6F3949A1),
+                        Color(0x000026FF)
+                      ],
+                    ),
+                  ),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        ConstrainedBox(
+                          constraints: BoxConstraints(
+                              maxHeight:
+                                  MediaQuery.of(context).size.height * 0.5),
+                          child: SizedBox(
+                            height: users.length * 90,
+                            child: ConstrainedBox(
+                              constraints: BoxConstraints(
+                                  maxHeight:
+                                      MediaQuery.of(context).size.height - 180),
+                              child: RefreshIndicator(
+                                onRefresh: fetchUsers,
+                                color: Colors.blueAccent,
+                                child: ListView.separated(
+                                  separatorBuilder: (context, index) =>
+                                      const SizedBox(
+                                    height: 6,
+                                  ),
+                                  itemCount: users.length,
+                                  itemBuilder: (context, index) {
+                                    final user = users[index];
+                                    Future Update_worker(
+                                        int status, String worker) async {
+                                      if (name.value == user['username']) {
                                         showDialog(
                                           context: context,
                                           builder: (context) => Column(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
                                             children: [
-                                              Container(
+                                              SizedBox(
                                                 width: MediaQuery.of(context)
                                                         .size
                                                         .width -
@@ -448,29 +127,338 @@ class _UsersState extends State<Users> {
                                                         .size
                                                         .width -
                                                     40,
-                                                child: False(
+                                                child: const False(
                                                     text:
-                                                        "لا يمكن حذف بيانات الحساب الحالي"),
+                                                        "لا يمكن تعديل بيانات الحساب الحالي"),
                                               ),
                                             ],
                                           ),
                                         );
                                         fetchUsers();
                                       } else {
-                                        final updated_report = users[status];
-                                        print("asas");
-                                        final real_index = updated_report['id'];
-                                        final req = await http.delete(Uri.parse(
-                                            "http://192.168.1.169:8000/del_user/${real_index}"));
+                                        if (worker == "false") {
+                                          final updatedUser = users[status];
 
-                                        if (req.statusCode == 200) {
+                                          final realIndex = updatedUser['id'];
+                                          final req = await http.put(Uri.parse(
+                                              "http://172.20.121.203:8000/worker/$realIndex"));
+
+                                          if (req.statusCode == 200) {
+                                            Future.delayed(
+                                                const Duration(seconds: 2), () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          const Users()));
+                                            });
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) => Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  SizedBox(
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width -
+                                                            80,
+                                                    height:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width -
+                                                            40,
+                                                    child: const True(
+                                                        text:
+                                                            "تم تحديث البيانات"),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          } else {
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) => Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  SizedBox(
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width -
+                                                            80,
+                                                    height:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width -
+                                                            40,
+                                                    child: const False(
+                                                        text: "حدث خطأ ما"),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          }
+                                        } else {
+                                          final updatedUser = users[status];
+                                          print("asas");
+                                          final realIndex = updatedUser['id'];
+                                          final req = await http.put(Uri.parse(
+                                              "http://172.20.121.203:8000/not_worker/$realIndex"));
+                                          final req2 = await http.put(Uri.parse(
+                                              "http://172.20.121.203:8000/not_admin/$realIndex"));
+
+                                          if (req.statusCode == 200 &&
+                                              req2.statusCode == 200) {
+                                            Future.delayed(
+                                                const Duration(seconds: 2), () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          const Users()));
+                                            });
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) => Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  SizedBox(
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width -
+                                                            80,
+                                                    height:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width -
+                                                            40,
+                                                    child: const True(
+                                                        text:
+                                                            "تم تحديث البيانات"),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                            fetchUsers();
+                                          } else {
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) => Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  SizedBox(
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width -
+                                                            80,
+                                                    height:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width -
+                                                            40,
+                                                    child: const False(
+                                                        text: "حدث خطأ ما"),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          }
+                                        }
+                                      }
+                                    }
+
+                                    Future Update(
+                                        int status, String admin) async {
+                                      if (name.value == user['username']) {
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) => Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              SizedBox(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width -
+                                                    80,
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .width -
+                                                    40,
+                                                child: const False(
+                                                    text:
+                                                        "لا يمكن تعديل بيانات الحساب الحالي"),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                        fetchUsers();
+                                      } else {
+                                        if (admin == "false") {
+                                          print('false');
+                                          final updatedUser = users[status];
+                                          print("asas");
+                                          final realIndex = updatedUser['id'];
+                                          final req = await http.put(Uri.parse(
+                                              "http://172.20.121.203:8000/admin/$realIndex"));
+
+                                          if (req.statusCode == 200) {
+                                            Future.delayed(
+                                                const Duration(seconds: 2), () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          const Users()));
+                                            });
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) => Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  SizedBox(
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width -
+                                                            80,
+                                                    height:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width -
+                                                            40,
+                                                    child: const True(
+                                                        text:
+                                                            "تم تحديث البيانات"),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          } else {
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) => Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  SizedBox(
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width -
+                                                            80,
+                                                    height:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width -
+                                                            40,
+                                                    child: const False(
+                                                        text: "حدث خطأ ما"),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          }
+                                        } else {
+                                          final updatedUser = users[status];
+
+                                          final realIndex = updatedUser['id'];
+                                          final req = await http.put(Uri.parse(
+                                              "http://172.20.121.203:8000/not_admin/$realIndex"));
+                                          final req2 = await http.put(Uri.parse(
+                                              "http://172.20.121.203:8000/not_worker/$realIndex"));
+
+                                          if (req.statusCode == 200 &&
+                                              req2.statusCode == 200) {
+                                            Future.delayed(
+                                                const Duration(seconds: 2), () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          const Users()));
+                                            });
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) => Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  SizedBox(
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width -
+                                                            80,
+                                                    height:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width -
+                                                            40,
+                                                    child: const True(
+                                                        text:
+                                                            "تم تحديث البيانات"),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                            fetchUsers();
+                                          } else {
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) => Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  SizedBox(
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width -
+                                                            80,
+                                                    height:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width -
+                                                            40,
+                                                    child: const False(
+                                                        text: "حدث خطأ ما"),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          }
+                                        }
+                                      }
+                                    }
+
+                                    Delete(int status) async {
+                                      final response = await http.post(Uri.parse(
+                                          "http://172.20.121.203:8000/user/${user_id.value}"));
+
+                                      if (response.statusCode == 200) {
+                                        final result = jsonDecode(
+                                                utf8.decode(response.bodyBytes))
+                                            as Map<String, dynamic>;
+                                        print(result['username']);
+                                        print(user['username']);
+                                        if (result['username'] ==
+                                            user['username']) {
                                           showDialog(
                                             context: context,
                                             builder: (context) => Column(
                                               mainAxisAlignment:
                                                   MainAxisAlignment.center,
                                               children: [
-                                                Container(
+                                                SizedBox(
                                                   width: MediaQuery.of(context)
                                                           .size
                                                           .width -
@@ -479,229 +467,83 @@ class _UsersState extends State<Users> {
                                                           .size
                                                           .width -
                                                       40,
-                                                  child: True(
-                                                      text: "تم حذف الحساب"),
+                                                  child: const False(
+                                                      text:
+                                                          "لا يمكن حذف بيانات الحساب الحالي"),
                                                 ),
                                               ],
                                             ),
                                           );
                                           fetchUsers();
                                         } else {
-                                          showDialog(
+                                          final updatedReport = users[status];
+                                          print("asas");
+                                          final realIndex = updatedReport['id'];
+                                          final req = await http.delete(Uri.parse(
+                                              "http://172.20.121.203:8000/del_user/$realIndex"));
+
+                                          if (req.statusCode == 200) {
+                                            showDialog(
                                               context: context,
                                               builder: (context) => Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      Container(
-                                                        width: MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .width -
-                                                            80,
-                                                        height: MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .width -
-                                                            40,
-                                                        child: False(
-                                                            text: "حدث خطأ ما"),
-                                                      ),
-                                                    ],
-                                                  ));
-                                        }
-                                        print('else');
-                                      }
-                                    }
-                                  }
-
-                                  Future<bool> showAlertDialog(
-                                      BuildContext context,
-                                      String message) async {
-                                    // set up the buttons
-                                    Widget cancelButton = ElevatedButton(
-                                      child: Text(
-                                        "لا",
-                                        style: TextStyle(
-                                            fontFamily: 'font1',
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16),
-                                      ),
-                                      onPressed: () {
-                                        // returnValue = false;
-                                        Navigator.of(context).pop(false);
-                                      },
-                                    );
-                                    Widget continueButton = ElevatedButton(
-                                      child: Text(
-                                        "نعم",
-                                        style: TextStyle(
-                                            fontFamily: 'font1',
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16,
-                                            color: Colors.red),
-                                      ),
-                                      onPressed: () {
-                                        // returnValue = true;
-                                        Navigator.of(context).pop(true);
-                                      },
-                                    );
-                                    AlertDialog alert = AlertDialog(
-                                      title: Text(
-                                        "هل أنت متأكد؟",
-                                        textAlign: TextAlign.end,
-                                        style: TextStyle(
-                                            fontFamily: 'font1',
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20),
-                                      ),
-                                      content: Text(
-                                        message,
-                                        textAlign: TextAlign.end,
-                                        style: TextStyle(
-                                            fontFamily: 'font1',
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w600,
-                                            color: Colors.black38),
-                                      ),
-                                      actions: [
-                                        cancelButton,
-                                        continueButton,
-                                      ],
-                                    ); // show the dialog
-                                    final result = await showDialog<bool?>(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return alert;
-                                      },
-                                    );
-                                    return result ?? false;
-                                  }
-
-                                  return Dismissible(
-                                    background: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Container(
-                                          width: 80,
-                                          decoration: ShapeDecoration(
-                                              color: Colors.blue,
-                                              shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          20))),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Column(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
                                                 children: [
-                                                  Icon(
-                                                    Icons.person_pin_rounded,
-                                                    color: Colors.white,
-                                                    size: 40,
+                                                  SizedBox(
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width -
+                                                            80,
+                                                    height:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width -
+                                                            40,
+                                                    child: const True(
+                                                        text: "تم حذف الحساب"),
                                                   ),
-                                                  user['admin'] == 'true'
-                                                      ? Text(
-                                                          "مستخدم",
-                                                          style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontFamily: 'font1',
-                                                            fontWeight:
-                                                                FontWeight.w700,
-                                                          ),
-                                                        )
-                                                      : Text(
-                                                          "أدمن",
-                                                          style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontFamily: 'font1',
-                                                            fontWeight:
-                                                                FontWeight.w700,
-                                                          ),
-                                                        )
                                                 ],
                                               ),
-                                            ],
-                                          ),
-                                        ),
-                                        Container(
-                                          decoration: ShapeDecoration(
-                                              color: Colors.red,
-                                              shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          20))),
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Container(
-                                                width: 80,
-                                                child: Column(
-                                                  children: [
-                                                    Icon(
-                                                      Icons.delete,
-                                                      color: Colors.white,
-                                                      size: 40,
-                                                    ),
-                                                    Text(
-                                                      "حذف",
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontFamily: 'font1',
-                                                        fontWeight:
-                                                            FontWeight.w700,
-                                                      ),
-                                                    )
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    key: UniqueKey(),
-                                    onDismissed: (direction) {
-                                      if (direction ==
-                                          DismissDirection.endToStart) {
-                                        showAlertDialog(context,
-                                                "الضغط على نعم سيقوم بحذف البلاغ")
-                                            .then((bool1) {
-                                          if (bool1 == true) {
-                                            Delete(index);
-                                          } else {
+                                            );
                                             fetchUsers();
-                                          }
-                                        });
-                                      } else if (direction ==
-                                          DismissDirection.startToEnd) {
-                                        showAlertDialog(
-                                                context,
-                                                user['admin'] == 'true'
-                                                    ? "الضغط على نعم سيقوم بتحويل الحساب الى حساب مستخدم "
-                                                    : "الضغط على نعم سيقوم بتحويل الحساب الى حساب ادمن ")
-                                            .then((bool2) {
-                                          if (bool2 == true) {
-                                            Update(index,
-                                                user['admin'].toString());
                                           } else {
-                                            fetchUsers();
+                                            showDialog(
+                                                context: context,
+                                                builder: (context) => Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        SizedBox(
+                                                          width: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width -
+                                                              80,
+                                                          height: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width -
+                                                              40,
+                                                          child: const False(
+                                                              text:
+                                                                  "حدث خطأ ما"),
+                                                        ),
+                                                      ],
+                                                    ));
                                           }
-                                        });
+                                          print('else');
+                                        }
                                       }
-                                    },
-                                    child: Container(
+                                    }
+
+                                    return Container(
                                         height: 70,
-                                        margin: EdgeInsets.all(10),
+                                        margin: const EdgeInsets.all(10),
                                         decoration: BoxDecoration(
                                             color: user['admin'] == 'true'
-                                                ? Color(0xFF2B3185)
+                                                ? const Color(0xFF2B3185)
                                                 : Colors.teal,
                                             borderRadius:
                                                 BorderRadius.circular(20),
@@ -715,39 +557,42 @@ class _UsersState extends State<Users> {
                                         child: TextButton(
                                           onPressed: () {
                                             Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) => User(
-                                                    onTap3: () {
-                                                      Update_worker(
-                                                          index,
-                                                          user['worker']
-                                                              .toString());
-                                                    },
-                                                    User_data: user,
-                                                    pass: decryptPassword(
-                                                      user['password'],
-                                                    ),
-                                                    inedx: index + 1,
-                                                    name12: user['username'],
-                                                    onTap1: () {
-                                                      Delete(index);
-                                                    },
-                                                    onTap2: () {
-                                                      Update(
-                                                        index,
-                                                        user['admin']
-                                                            .toString(),
-                                                      );
-                                                    },
-                                                    admin_user: user['admin']
-                                                        .toString(),
-                                                    floor: user['floor'],
-                                                    desc: user['floor'],
-                                                    type: user['section'],
-                                                    section: user['section']),
-                                              ),
-                                            );
+                                                context,
+                                                PageTransition(
+                                                    child: User(
+                                                        onTap3: () {
+                                                          Update_worker(
+                                                              index,
+                                                              user['worker']
+                                                                  .toString());
+                                                        },
+                                                        User_data: user,
+                                                        pass: decryptPassword(
+                                                          user['password'],
+                                                        ),
+                                                        inedx: index + 1,
+                                                        name12:
+                                                            user['username'],
+                                                        onTap1: () {
+                                                          Delete(index);
+                                                        },
+                                                        onTap2: () {
+                                                          Update(
+                                                            index,
+                                                            user['admin']
+                                                                .toString(),
+                                                          );
+                                                        },
+                                                        admin_user:
+                                                            user['admin']
+                                                                .toString(),
+                                                        floor: user['floor'],
+                                                        desc: user['floor'],
+                                                        type: user['section'],
+                                                        section:
+                                                            user['section']),
+                                                    type: PageTransitionType
+                                                        .rightToLeftWithFade));
                                           },
                                           child: Row(
                                             mainAxisAlignment:
@@ -756,8 +601,9 @@ class _UsersState extends State<Users> {
                                               Row(
                                                 children: [
                                                   Container(
-                                                    margin: EdgeInsets.only(
-                                                        right: 10),
+                                                    margin:
+                                                        const EdgeInsets.only(
+                                                            right: 10),
                                                     child: Column(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
@@ -765,13 +611,13 @@ class _UsersState extends State<Users> {
                                                       children: [
                                                         Text(
                                                           user['username'],
-                                                          style: TextStyle(
-                                                              color: const Color
+                                                          style: const TextStyle(
+                                                              color: Color
                                                                   .fromARGB(
-                                                                  229,
-                                                                  255,
-                                                                  255,
-                                                                  255),
+                                                                      229,
+                                                                      255,
+                                                                      255,
+                                                                      255),
                                                               fontFamily:
                                                                   'font1',
                                                               fontWeight:
@@ -780,7 +626,7 @@ class _UsersState extends State<Users> {
                                                         ),
                                                         Text(
                                                           user['section'],
-                                                          style: TextStyle(
+                                                          style: const TextStyle(
                                                               color: Colors
                                                                   .white54,
                                                               fontFamily:
@@ -795,9 +641,10 @@ class _UsersState extends State<Users> {
                                                 ],
                                               ),
                                               Container(
-                                                margin:
-                                                    EdgeInsets.only(right: 10),
-                                                padding: EdgeInsets.all(10),
+                                                margin: const EdgeInsets.only(
+                                                    right: 10),
+                                                padding:
+                                                    const EdgeInsets.all(10),
                                                 decoration: ShapeDecoration(
                                                     color: Colors.black12,
                                                     shape:
@@ -806,116 +653,111 @@ class _UsersState extends State<Users> {
                                                                 BorderRadius
                                                                     .circular(
                                                                         30))),
-                                                child: Icon(
-                                                  Icons.person,
-                                                  color: user['username'] ==
-                                                          name.value
-                                                      ? Colors.white
-                                                      : user['admin'] == 'true'
-                                                          ? Colors.white
-                                                          : Colors.white,
-                                                ),
+                                                child: Icon(Icons.person,
+                                                    color: Colors.white),
                                               ),
                                             ],
                                           ),
-                                        )),
-                                  );
-                                  //AdminCard(name: name, onTap1: onTap1, onTap2: onTap2, section: section, type: type, desc: desc, floor: floor, done: done, admin: admin)
-                                },
+                                        )); //AdminCard(name: name, onTap1: onTap1, onTap2: onTap2, section: section, type: type, desc: desc, floor: floor, done: done, admin: admin)
+                                  },
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
 
-                      ///ListView.builder(itemCount: ,),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            child: Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Container(
-                                      margin: EdgeInsets.all(10),
-                                      width: 40,
-                                      height: 30,
-                                      decoration: BoxDecoration(
-                                        color: Color(0xFF2B3185),
-                                        borderRadius: BorderRadius.circular(10),
+                        ///ListView.builder(itemCount: ,),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Container(
+                                        margin: const EdgeInsets.all(10),
+                                        width: 40,
+                                        height: 30,
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xFF2B3185),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
                                       ),
-                                    ),
-                                    Text(
-                                      "=> مستخدم أدمن",
-                                      style: TextStyle(
-                                          fontFamily: 'font1',
-                                          fontWeight: FontWeight.w700,
-                                          color: Colors.white),
-                                    )
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Container(
-                                      margin: EdgeInsets.all(10),
-                                      width: 40,
-                                      height: 30,
-                                      decoration: BoxDecoration(
-                                        color: Colors.teal,
-                                        borderRadius: BorderRadius.circular(10),
+                                      const Text(
+                                        "=> مستخدم أدمن",
+                                        style: TextStyle(
+                                            fontFamily: 'font1',
+                                            fontWeight: FontWeight.w700,
+                                            color: Colors.white),
+                                      )
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Container(
+                                        margin: const EdgeInsets.all(10),
+                                        width: 40,
+                                        height: 30,
+                                        decoration: BoxDecoration(
+                                          color: Colors.teal,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
                                       ),
-                                    ),
-                                    Text(
-                                      "=> مستخدم عادي",
-                                      style: TextStyle(
-                                          fontFamily: 'font1',
-                                          fontWeight: FontWeight.w700,
-                                          color: Colors.white),
-                                    )
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Container(
-                                      margin: EdgeInsets.all(10),
-                                      width: 40,
-                                      height: 30,
-                                      decoration: BoxDecoration(
-                                        color: Color(0xFF2B3185),
-                                        borderRadius: BorderRadius.circular(10),
-                                        border: Border.all(
-                                            width: 2.0, color: Colors.white),
+                                      const Text(
+                                        "=> مستخدم عادي",
+                                        style: TextStyle(
+                                            fontFamily: 'font1',
+                                            fontWeight: FontWeight.w700,
+                                            color: Colors.white),
+                                      )
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Container(
+                                        margin: const EdgeInsets.all(10),
+                                        width: 40,
+                                        height: 30,
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xFF2B3185),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          border: Border.all(
+                                              width: 2.0, color: Colors.white),
+                                        ),
                                       ),
-                                    ),
-                                    Text(
-                                      "=>  المستخدم الحالي",
-                                      style: TextStyle(
-                                          fontFamily: 'font1',
-                                          fontWeight: FontWeight.w700,
-                                          color: Colors.white),
-                                    )
-                                  ],
-                                )
-                              ],
+                                      const Text(
+                                        "=>  المستخدم الحالي",
+                                        style: TextStyle(
+                                            fontFamily: 'font1',
+                                            fontWeight: FontWeight.w700,
+                                            color: Colors.white),
+                                      )
+                                    ],
+                                  )
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
           )
         : Scaffold(
-            drawer: MyDrawer(),
+            drawer: const MyDrawer(),
             appBar: AppBar(
               toolbarHeight: 50.0,
-              title: Text(
+              title: const Text(
                 "جميع الحسابات",
                 style: TextStyle(
                     fontFamily: 'font1',
@@ -929,7 +771,7 @@ class _UsersState extends State<Users> {
                     onPressed: () {
                       Scaffold.of(context).openDrawer();
                     },
-                    icon: Icon(Icons.menu),
+                    icon: const Icon(Icons.menu),
                   );
                 },
               ),
@@ -937,10 +779,10 @@ class _UsersState extends State<Users> {
             body: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
+                SizedBox(
                   width: MediaQuery.of(context).size.width - 80,
                   height: MediaQuery.of(context).size.width - 40,
-                  child: False(text: "حدث خطأ ما"),
+                  child: const False(text: "حدث خطأ ما"),
                 ),
               ],
             ),
@@ -949,7 +791,7 @@ class _UsersState extends State<Users> {
 
   Future<void> fetchUsers() async {
     try {
-      final url = Uri.parse("http://192.168.1.169:8000/users");
+      final url = Uri.parse("http://172.20.121.203:8000/users");
       final response = await http.get(url);
       final body = response.bodyBytes;
       final json = jsonDecode(utf8.decode(body));

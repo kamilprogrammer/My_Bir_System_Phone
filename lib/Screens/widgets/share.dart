@@ -20,46 +20,13 @@ class _ShareState extends State<ShareWidget> {
   int share1 = 0;
   int share2 = 0;
 
-  List<bool> workers_select = [
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-  ];
-
   @override
   void initState() {
     super.initState();
     reload();
   }
 
+  @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: MediaQuery.of(context).size.height - 400,
@@ -71,8 +38,8 @@ class _ShareState extends State<ShareWidget> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Container(
-                margin: EdgeInsets.only(top: 20),
-                child: Row(
+                margin: const EdgeInsets.only(top: 20),
+                child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
@@ -87,7 +54,7 @@ class _ShareState extends State<ShareWidget> {
                   ],
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               RefreshIndicator(
@@ -96,7 +63,7 @@ class _ShareState extends State<ShareWidget> {
                       .toDouble(),
                   width: MediaQuery.of(context).size.width - 80,
                   child: ListView.separated(
-                    separatorBuilder: (context, index) => SizedBox(
+                    separatorBuilder: (context, index) => const SizedBox(
                       height: 20,
                     ),
                     itemCount: workers.length,
@@ -106,7 +73,7 @@ class _ShareState extends State<ShareWidget> {
                       return ListTile(
                         selected:
                             share1 == worker['id'] || share2 == worker['id'],
-                        selectedTileColor: Color.fromARGB(56, 78, 78, 78),
+                        selectedTileColor: const Color.fromARGB(56, 78, 78, 78),
                         tileColor: Colors.white24,
                         onLongPress: () {
                           print(share1);
@@ -127,7 +94,7 @@ class _ShareState extends State<ShareWidget> {
 
                               print(share2);
                             } else {
-                              Future.delayed(Duration(seconds: 1), () {
+                              Future.delayed(const Duration(seconds: 1), () {
                                 Navigator.of(context).pop();
                               });
 
@@ -136,14 +103,14 @@ class _ShareState extends State<ShareWidget> {
                                 builder: (context) => Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Container(
+                                    SizedBox(
                                       width: MediaQuery.of(context).size.width -
                                           80,
                                       height:
                                           MediaQuery.of(context).size.width -
                                               40,
-                                      child:
-                                          False(text: "يوجد مشكلة في النظام"),
+                                      child: const False(
+                                          text: "يوجد مشكلة في النظام"),
                                     ),
                                   ],
                                 ),
@@ -169,7 +136,7 @@ class _ShareState extends State<ShareWidget> {
                                 borderRadius: BorderRadius.circular(40)),
                             color: Colors.green,
                           ),
-                          child: Icon(
+                          child: const Icon(
                             Icons.person,
                             color: Colors.white,
                             size: 18.0,
@@ -177,7 +144,7 @@ class _ShareState extends State<ShareWidget> {
                         ),
                         title: Text(
                           worker['username'],
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.black,
                             fontFamily: 'font1',
                             fontSize: 14.0,
@@ -187,8 +154,8 @@ class _ShareState extends State<ShareWidget> {
                         subtitle: Text(
                           worker['section'],
                           textAlign: TextAlign.left,
-                          style: TextStyle(
-                            color: const Color.fromARGB(211, 0, 0, 0),
+                          style: const TextStyle(
+                            color: Color.fromARGB(211, 0, 0, 0),
                             fontFamily: 'font1',
                             fontSize: 14.0,
                             fontWeight: FontWeight.w500,
@@ -203,7 +170,7 @@ class _ShareState extends State<ShareWidget> {
                   return reload();
                 },
               ),
-              SizedBox(
+              const SizedBox(
                 height: 40,
               ),
               Padding(
@@ -225,7 +192,7 @@ class _ShareState extends State<ShareWidget> {
                         onPressed: () {
                           Navigator.pop(context);
                         },
-                        child: Text(
+                        child: const Text(
                           "إلغاء",
                           textAlign: TextAlign.left,
                           style: TextStyle(
@@ -251,7 +218,7 @@ class _ShareState extends State<ShareWidget> {
                         onPressed: () {
                           Share();
                         },
-                        child: Text(
+                        child: const Text(
                           "تحويل",
                           textAlign: TextAlign.left,
                           style: TextStyle(
@@ -275,7 +242,7 @@ class _ShareState extends State<ShareWidget> {
 
   Future<void> reload() async {
     try {
-      final url = Uri.parse("http://192.168.1.169:8000/workers");
+      final url = Uri.parse("http://172.20.121.203:8000/workers");
       final response2 = await http.get(url);
       final body = response2.bodyBytes;
       final json = jsonDecode(utf8.decode(body));
@@ -285,10 +252,10 @@ class _ShareState extends State<ShareWidget> {
       });
 
       final response1 = await http.post(
-          Uri.parse("http://192.168.1.169:8000/report/${widget.report_id}"));
+          Uri.parse("http://172.20.121.203:8000/report/${widget.report_id}"));
       final body1 = jsonDecode(response1.body);
 
-      workers.forEach((worker) {
+      for (var worker in workers) {
         print(worker['id']);
 
         if (worker['id'].toString() == body1['done_by'].toString()) {
@@ -305,7 +272,7 @@ class _ShareState extends State<ShareWidget> {
           }
         } else if (worker['id'].toString() != body1['done_by'].toString() ||
             worker['id'].toString() != body1['done_by2'].toString()) {}
-      });
+      }
     } catch (e) {
       print(e);
     }
@@ -314,7 +281,7 @@ class _ShareState extends State<ShareWidget> {
   /*Future<void> get_done_by_s() async {
     try {
       final url =
-          Uri.parse("http://192.168.1.169:8000/report/${widget.report_id}");
+          Uri.parse("http://172.20.121.203:8000/report/${widget.report_id}");
       final response = await http.post(url);
       final body = response.bodyBytes;
 
@@ -360,7 +327,7 @@ class _ShareState extends State<ShareWidget> {
       Future<bool> showAlertDialog(BuildContext context, String message) async {
         // set up the buttons
         Widget cancelButton = ElevatedButton(
-          child: Text(
+          child: const Text(
             "لا",
             style: TextStyle(
                 fontFamily: 'font1', fontWeight: FontWeight.bold, fontSize: 16),
@@ -371,7 +338,7 @@ class _ShareState extends State<ShareWidget> {
           },
         );
         Widget continueButton = ElevatedButton(
-          child: Text(
+          child: const Text(
             "نعم",
             style: TextStyle(
                 fontFamily: 'font1',
@@ -385,7 +352,7 @@ class _ShareState extends State<ShareWidget> {
           },
         );
         AlertDialog alert = AlertDialog(
-          title: Text(
+          title: const Text(
             "هل أنت متأكد؟",
             textAlign: TextAlign.end,
             style: TextStyle(
@@ -394,7 +361,7 @@ class _ShareState extends State<ShareWidget> {
           content: Text(
             message,
             textAlign: TextAlign.end,
-            style: TextStyle(
+            style: const TextStyle(
                 fontFamily: 'font1',
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
@@ -418,7 +385,7 @@ class _ShareState extends State<ShareWidget> {
           .then((bool1) async {
         if (bool1 == true) {
           final request = await http.put(Uri.parse(
-              "http://192.168.1.169:8000/share/${widget.report_id}/${share1}/${share2}"));
+              "http://172.20.121.203:8000/share/${widget.report_id}/$share1/$share2"));
           if (request.statusCode == 200) {
             Navigator.pop(context);
             showDialog(
@@ -426,10 +393,10 @@ class _ShareState extends State<ShareWidget> {
               builder: (context) => Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
+                  SizedBox(
                     width: MediaQuery.of(context).size.width - 80,
                     height: MediaQuery.of(context).size.width - 40,
-                    child: True(text: "تم تحديث البيانات"),
+                    child: const True(text: "تم تحديث البيانات"),
                   ),
                 ],
               ),
@@ -439,7 +406,7 @@ class _ShareState extends State<ShareWidget> {
       });
     } else {
       final request = await http.put(Uri.parse(
-          "http://192.168.1.169:8000/share/${widget.report_id}/${share1}/${share2}"));
+          "http://172.20.121.203:8000/share/${widget.report_id}/$share1/$share2"));
 
       if (request.statusCode == 200) {
         Navigator.pop(context);
@@ -448,10 +415,10 @@ class _ShareState extends State<ShareWidget> {
           builder: (context) => Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
+              SizedBox(
                 width: MediaQuery.of(context).size.width - 80,
                 height: MediaQuery.of(context).size.width - 40,
-                child: True(text: "تم تحويل المهمة"),
+                child: const True(text: "تم تحويل المهمة"),
               ),
             ],
           ),
@@ -462,10 +429,10 @@ class _ShareState extends State<ShareWidget> {
           builder: (context) => Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
+              SizedBox(
                 width: MediaQuery.of(context).size.width - 80,
                 height: MediaQuery.of(context).size.width - 40,
-                child: False(text: "حدث خطأ ما"),
+                child: const False(text: "حدث خطأ ما"),
               ),
             ],
           ),

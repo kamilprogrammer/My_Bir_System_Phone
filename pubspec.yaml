@@ -43,6 +43,11 @@ dependencies:
   nfc_manager: ^3.5.0
   device_info_plus: ^11.0.0
   network_info_plus: ^6.0.2
+  flutter_animate: ^4.5.0
+  action_slider: ^0.7.0
+  auto_animated: ^3.2.0
+  page_transition: ^2.1.0
+  
 
 
 dev_dependencies:

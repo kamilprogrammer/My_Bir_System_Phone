@@ -2,67 +2,59 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:rjd_app/Screens/AboutScreen.dart';
-import 'package:rjd_app/Screens/HomeScreen.dart';
-import 'package:rjd_app/Screens/ReportScreen.dart';
-import 'package:rjd_app/Screens/admin/AdminHomeScreen2.dart';
-import 'package:rjd_app/Screens/widgets/AdminCard.dart';
-import 'package:http/http.dart' as http;
+import 'package:rjd_app/Screens/admin/AdminHomeScreen.dart';
 import 'package:rjd_app/Screens/widgets/Card.dart';
 import 'package:rjd_app/Screens/widgets/Drawer.dart';
-import 'package:page_transition/page_transition.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:rjd_app/Screens/widgets/Full-Admin-Card.dart';
 import 'package:rjd_app/Screens/widgets/false.dart';
-import 'package:rjd_app/Screens/widgets/share.dart';
-import 'package:rjd_app/Screens/widgets/true.dart';
 import 'package:rjd_app/main.dart';
-import 'package:flutter_animate/flutter_animate.dart';
+import 'package:http/http.dart' as http;
+import 'package:page_transition/page_transition.dart';
 
-class Adminhomescreen extends StatefulWidget {
-  const Adminhomescreen({super.key});
+class AdminHomeScreen2 extends StatefulWidget {
+  const AdminHomeScreen2({super.key});
 
   @override
-  State<Adminhomescreen> createState() => _AdminhomescreenState();
+  State<AdminHomeScreen2> createState() => _AdminHomeScreen2State();
 }
 
-class _AdminhomescreenState extends State<Adminhomescreen> {
-  @override
-  @override
+class _AdminHomeScreen2State extends State<AdminHomeScreen2> {
   void initState() {
     super.initState();
-    fetchEmployees();
+
     fetchReports("All", "All");
   }
 
   List reports = [];
-  List employees = [];
 
   @override
   Widget build(BuildContext context) {
     String user = "All";
     String date = "All";
-
-    int index = 0;
-    int inedx_clicked = 0;
-    double width = MediaQuery.of(context).size.width;
     String? val = "";
     return admin1.value == 'true'
         ? PopScope(
             canPop: false,
             child: Scaffold(
               drawer: const MyDrawer(),
+              floatingActionButtonLocation:
+                  FloatingActionButtonLocation.startFloat,
               floatingActionButton: FloatingActionButton(
-                child: Icon(
-                  Icons.next_plan,
-                  color: Color(0xFF323751),
-                ).animate().rotate(),
+                child: Transform.scale(
+                  scaleX: -1,
+                  child: Icon(
+                    Icons.next_plan,
+                    color: Color(0xFF323751),
+                  ).animate().rotate(),
+                ),
                 backgroundColor: Colors.white,
                 onPressed: () {
                   Navigator.push(
                       context,
                       PageTransition(
-                          type: PageTransitionType.rightToLeft,
-                          child: AdminHomeScreen2()));
+                          type: PageTransitionType.leftToRight,
+                          child: Adminhomescreen()));
                 },
               ).animate().scaleXY(),
               appBar: AppBar(
@@ -103,7 +95,6 @@ class _AdminhomescreenState extends State<Adminhomescreen> {
                       DropdownMenuItem(
                         value: "All",
                         onTap: () {
-                          fetchEmployees();
                           fetchReports("All", "All");
                         },
                         child: Container(
@@ -154,7 +145,6 @@ class _AdminhomescreenState extends State<Adminhomescreen> {
                       DropdownMenuItem(
                         value: "None",
                         onTap: () {
-                          fetchEmployees();
                           fetchReports("All", "All");
                         },
                         child: Row(
@@ -214,75 +204,6 @@ class _AdminhomescreenState extends State<Adminhomescreen> {
                   ),
                   child: Column(
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            height: 40,
-                            width: MediaQuery.of(context).size.width - 60,
-                            child: ListView.separated(
-                              scrollDirection: Axis.horizontal,
-                              separatorBuilder: (context, index) =>
-                                  const SizedBox(
-                                width: 8,
-                              ),
-                              itemCount: employees.length,
-                              itemBuilder: (context, index) {
-                                final employee = employees[index];
-                                return GestureDetector(
-                                  onTap: () {
-                                    if (employee['username'] !=
-                                        "جميع الحسابات") {
-                                      setState(() {
-                                        employees = employees.where((test) {
-                                          return test['username'] ==
-                                              employee['username'];
-                                        }).toList();
-                                        employees.insert(
-                                            0, {"username": "جميع الحسابات"});
-
-                                        inedx_clicked = index;
-                                        user = employee['username'];
-                                      });
-                                      fetchReports(date, user);
-                                    } else {
-                                      fetchReports("All", "All");
-                                      fetchEmployees();
-                                    }
-                                  },
-                                  child: Container(
-                                    padding: EdgeInsets.all(4),
-                                    height: 32,
-                                    decoration: BoxDecoration(
-                                      color: Color(0xFF323751),
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(8),
-                                      ),
-                                    ),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          "${employee['username']}",
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              fontFamily: "font1",
-                                              fontSize: 12,
-                                              color: Colors.white),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                            )
-                                .animate(delay: Duration(milliseconds: 50))
-                                .fade()
-                                .slideY(),
-                          ),
-                        ],
-                      ),
                       SizedBox(
                         height: MediaQuery.of(context).size.height * 0.8,
                         child: RefreshIndicator(
@@ -354,67 +275,22 @@ class _AdminhomescreenState extends State<Adminhomescreen> {
     final response = await http.get(url);
     final body = response.bodyBytes;
     final final_json = jsonDecode(utf8.decode(body));
+    List result = final_json;
+    List report_here = result.where((report) {
+      return report['done'] == "true";
+    }).toList();
     if (date == "All" && user == "All") {
       setState(() {
-        reports = final_json;
-        reports = reports.where((test) {
-          return test['done'] == "false";
-        }).toList();
+        reports = report_here;
       });
     } else if (date != "All") {
+      print(user + date);
       setState(() {
-        reports = final_json;
-        reports = reports
-            .where((report) {
-              return report['date'] == date;
-            })
-            .toList()
-            .where((test) {
-              return test['done'] == "false";
-            })
-            .toList();
+        reports = report_here.where((report) {
+          return report['date'] == date;
+        }).toList();
       });
       print(reports);
-    } else if (user != "All") {
-      setState(() {
-        reports = final_json;
-        reports = reports
-            .where((report) {
-              return report['name'] == user.toString();
-            })
-            .toList()
-            .where((test) {
-              return test['done'] == "false";
-            })
-            .toList();
-      });
     }
   }
-
-  Future<void> fetchEmployees() async {
-    final url = Uri.parse("http://172.20.121.203:8000/employees");
-    final response = await http.get(url);
-    final body = response.bodyBytes;
-    final json = jsonDecode(utf8.decode(body));
-    setState(() {
-      employees = json;
-      employees.insert(0, {'username': 'جميع الحسابات'});
-    });
-  }
-
-  /*void View_Share(int status) async {
-    //final reportShared = reports[status];
-    //int reportId = reportShared['id'];
-    print(reportId);
-
-    showDialog(
-        context: context,
-        builder: (context) => SizedBox(
-              height: MediaQuery.of(context).size.height - 400,
-              width: MediaQuery.of(context).size.width - 60,
-              child: ShareWidget(
-                report_id: reportId,
-              ),
-            ));
-  }*/
 }

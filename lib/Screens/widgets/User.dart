@@ -54,23 +54,23 @@ class _UserState extends State<User> {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController name_controller =
+    TextEditingController nameController =
         TextEditingController(text: widget.name12);
-    TextEditingController section_controller =
+    TextEditingController sectionController =
         TextEditingController(text: widget.section);
-    TextEditingController floor_controller =
+    TextEditingController floorController =
         TextEditingController(text: widget.floor);
-    TextEditingController pass_controller =
+    TextEditingController passController =
         TextEditingController(text: widget.pass);
 
     print(name.value);
 
     Future<void> update_user() async {
-      if (name_controller.text.isNotEmpty &&
-          floor_controller.text.isNotEmpty &&
-          section_controller.text.isNotEmpty &&
-          pass_controller.text.isNotEmpty) {
-        final password = pass_controller.text;
+      if (nameController.text.isNotEmpty &&
+          floorController.text.isNotEmpty &&
+          sectionController.text.isNotEmpty &&
+          passController.text.isNotEmpty) {
+        final password = passController.text;
         final key = encrypt.Key.fromUtf8('#1bir.admin.hash.bir.admin.hash#');
 
         final iv = encrypt.IV.fromUtf8('#1bir.admin.app#');
@@ -87,7 +87,7 @@ class _UserState extends State<User> {
         final encryptedPassword = encryptPassword(password);
         final response = await http.put(
           Uri.parse(
-              "http://192.168.1.169:8000/update_user/${widget.User_data['id']}"),
+              "http://172.20.121.203:8000/update_user/${widget.User_data['id']}"),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
             "Access-Control-Allow-Origin": "*",
@@ -95,9 +95,9 @@ class _UserState extends State<User> {
           },
           body: jsonEncode(
             <String, String>{
-              'username': name_controller.text,
-              'floor': floor_controller.text,
-              'section': section_controller.text,
+              'username': nameController.text,
+              'floor': floorController.text,
+              'section': sectionController.text,
               'password': encryptedPassword.toString(),
               'worker': widget.User_data['worker'],
               'admin': widget.User_data['admin'],
@@ -106,16 +106,16 @@ class _UserState extends State<User> {
         );
         if (response.statusCode == 200) {
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => Users()));
+              context, MaterialPageRoute(builder: (context) => const Users()));
           showDialog(
             context: context,
             builder: (context) => Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
+                SizedBox(
                   width: MediaQuery.of(context).size.width - 80,
                   height: MediaQuery.of(context).size.width - 40,
-                  child: True(text: "تم تحديث البيانات"),
+                  child: const True(text: "تم تحديث البيانات"),
                 ),
               ],
             ),
@@ -127,10 +127,10 @@ class _UserState extends State<User> {
           builder: (context) => Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
+              SizedBox(
                 width: MediaQuery.of(context).size.width - 80,
                 height: MediaQuery.of(context).size.width - 40,
-                child: False(text: "الرجاء ملء جميع الحقول"),
+                child: const False(text: "الرجاء ملء جميع الحقول"),
               ),
             ],
           ),
@@ -138,7 +138,7 @@ class _UserState extends State<User> {
       }
     }
 
-    return new PopScope(
+    return PopScope(
       canPop: false,
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -146,14 +146,14 @@ class _UserState extends State<User> {
           appBar: AppBar(
             toolbarHeight: 50.0,
             leading: IconButton(
-              icon: Icon(Icons.arrow_back_ios),
+              icon: const Icon(Icons.arrow_back_ios),
               onPressed: () {
                 Navigator.pop(context);
               },
             ),
             title: Text(
-              widget.inedx.toString() + " الحساب رقم",
-              style: TextStyle(
+              "${widget.inedx} الحساب رقم",
+              style: const TextStyle(
                   fontFamily: 'font1',
                   fontWeight: FontWeight.bold,
                   fontSize: 18.0),
@@ -176,16 +176,14 @@ class _UserState extends State<User> {
                     : widget.User_data['worker'] == 'false'
                         ? "مستخدم عادي"
                         : 'موظف',
-                type: ("${widget.section} في ") +
-                    "\n" +
-                    ("${widget.floor} في الطابق "),
+                type: "${widget.section} في \n${widget.floor} في الطابق ",
                 desc: widget.desc,
                 floor: widget.inedx,
                 done: true,
                 admin: true,
                 user: true,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 80,
               ),
               widget.name12 != name.value
@@ -200,7 +198,7 @@ class _UserState extends State<User> {
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 ),
-                                shadows: [
+                                shadows: const [
                                   BoxShadow(
                                     color: Color(0x3F000000),
                                     blurRadius: 12,
@@ -221,9 +219,9 @@ class _UserState extends State<User> {
                                 ),
                                 textAlign: TextAlign.right,
                                 keyboardType: TextInputType.name,
-                                controller: name_controller,
+                                controller: nameController,
                                 decoration: InputDecoration(
-                                    suffixIcon: Icon(
+                                    suffixIcon: const Icon(
                                       Icons.person_outline_outlined,
                                       size: 20.0,
                                     ),
@@ -235,12 +233,13 @@ class _UserState extends State<User> {
                                           .withOpacity(0.6499999761581421),
                                     ),
                                     border: InputBorder.none,
-                                    contentPadding: EdgeInsets.only(top: 10)),
+                                    contentPadding:
+                                        const EdgeInsets.only(top: 10)),
                               ),
                             )
                           ],
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 16,
                         ),
                         Row(
@@ -252,7 +251,7 @@ class _UserState extends State<User> {
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 ),
-                                shadows: [
+                                shadows: const [
                                   BoxShadow(
                                     color: Color(0x3F000000),
                                     blurRadius: 12,
@@ -273,9 +272,9 @@ class _UserState extends State<User> {
                                 ),
                                 textAlign: TextAlign.end,
                                 keyboardType: TextInputType.name,
-                                controller: floor_controller,
+                                controller: floorController,
                                 decoration: InputDecoration(
-                                    suffixIcon: Icon(
+                                    suffixIcon: const Icon(
                                       Icons.format_list_numbered_rounded,
                                       size: 20.0,
                                     ),
@@ -287,12 +286,13 @@ class _UserState extends State<User> {
                                           .withOpacity(0.6499999761581421),
                                     ),
                                     border: InputBorder.none,
-                                    contentPadding: EdgeInsets.only(top: 10)),
+                                    contentPadding:
+                                        const EdgeInsets.only(top: 10)),
                               ),
                             )
                           ],
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 16,
                         ),
                         Row(
@@ -304,7 +304,7 @@ class _UserState extends State<User> {
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 ),
-                                shadows: [
+                                shadows: const [
                                   BoxShadow(
                                     color: Color(0x3F000000),
                                     blurRadius: 12,
@@ -325,9 +325,9 @@ class _UserState extends State<User> {
                                 ),
                                 textAlign: TextAlign.right,
                                 keyboardType: TextInputType.streetAddress,
-                                controller: section_controller,
+                                controller: sectionController,
                                 decoration: InputDecoration(
-                                    suffixIcon: Icon(
+                                    suffixIcon: const Icon(
                                       Icons.border_inner_rounded,
                                       size: 20.0,
                                     ),
@@ -342,12 +342,13 @@ class _UserState extends State<User> {
                                       fontWeight: FontWeight.w700,
                                     ),
                                     border: InputBorder.none,
-                                    contentPadding: EdgeInsets.only(top: 10)),
+                                    contentPadding:
+                                        const EdgeInsets.only(top: 10)),
                               ),
                             )
                           ],
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 16,
                         ),
                         Row(
@@ -359,7 +360,7 @@ class _UserState extends State<User> {
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 ),
-                                shadows: [
+                                shadows: const [
                                   BoxShadow(
                                     color: Color(0x3F000000),
                                     blurRadius: 12,
@@ -380,9 +381,9 @@ class _UserState extends State<User> {
                                 ),
                                 textAlign: TextAlign.right,
                                 obscureText: showPassword,
-                                controller: pass_controller,
+                                controller: passController,
                                 decoration: InputDecoration(
-                                    suffixIcon: Icon(
+                                    suffixIcon: const Icon(
                                       Icons.lock_outline_rounded,
                                       size: 20.0,
                                     ),
@@ -397,12 +398,13 @@ class _UserState extends State<User> {
                                       fontWeight: FontWeight.w700,
                                     ),
                                     border: InputBorder.none,
-                                    contentPadding: EdgeInsets.only(top: 10)),
+                                    contentPadding:
+                                        const EdgeInsets.only(top: 10)),
                               ),
                             )
                           ],
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 40,
                         ),
                         TextButton(
@@ -414,11 +416,11 @@ class _UserState extends State<User> {
                             decoration: ShapeDecoration(
                               color: Colors.white,
                               shape: RoundedRectangleBorder(
-                                side: BorderSide(
+                                side: const BorderSide(
                                     width: 2.0, color: Color(0xFF2B3185)),
                                 borderRadius: BorderRadius.circular(19),
                               ),
-                              shadows: [
+                              shadows: const [
                                 BoxShadow(
                                   color: Color(0xFF2B3185),
                                   blurRadius: 14,
@@ -440,7 +442,7 @@ class _UserState extends State<User> {
                             ),
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 20,
                         ),
                         TextButton(
@@ -452,11 +454,11 @@ class _UserState extends State<User> {
                             decoration: ShapeDecoration(
                               color: Colors.white,
                               shape: RoundedRectangleBorder(
-                                side: BorderSide(
+                                side: const BorderSide(
                                     width: 2.0, color: Color(0xFF2B3185)),
                                 borderRadius: BorderRadius.circular(19),
                               ),
-                              shadows: [
+                              shadows: const [
                                 BoxShadow(
                                   color: Color(0xFF2B3185),
                                   blurRadius: 14,
@@ -483,7 +485,7 @@ class _UserState extends State<User> {
                             ),
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 40,
                         ),
                         widget.admin_user == "true" &&
@@ -494,12 +496,12 @@ class _UserState extends State<User> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Container(
-                                      padding: EdgeInsets.all(10),
-                                      margin: EdgeInsets.only(right: 10),
+                                      padding: const EdgeInsets.all(10),
+                                      margin: const EdgeInsets.only(right: 10),
                                       decoration: ShapeDecoration(
                                           color: widget.admin_user == 'true'
-                                              ? Color(0xFF2B3185)
-                                              : Color(0xFF2B3185),
+                                              ? const Color(0xFF2B3185)
+                                              : const Color(0xFF2B3185),
                                           shape: RoundedRectangleBorder(
                                               borderRadius:
                                                   BorderRadius.circular(40))),
@@ -512,23 +514,24 @@ class _UserState extends State<User> {
                                     ),
                                     TextButton(
                                       onPressed: widget.onTap3,
+                                      style: TextButton.styleFrom(
+                                          backgroundColor:
+                                              const Color(0xFF2B3185),
+                                          padding: const EdgeInsets.all(20)),
                                       child: Text(
                                         widget.User_data['worker'] == 'false'
                                             ? "التحويل الى موظف"
                                             : "التحويل الى مستخدم",
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontFamily: 'font1',
                                             fontWeight: FontWeight.w700,
                                             color: Colors.white),
                                       ),
-                                      style: TextButton.styleFrom(
-                                          backgroundColor: Color(0xFF2B3185),
-                                          padding: EdgeInsets.all(20)),
                                     )
                                   ],
                                 ),
                               ),
-                        SizedBox(
+                        const SizedBox(
                           height: 20,
                         ),
                         Container(
@@ -536,14 +539,15 @@ class _UserState extends State<User> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Container(
-                                padding: EdgeInsets.all(10),
-                                margin: EdgeInsets.only(right: 10),
+                                padding: const EdgeInsets.all(10),
+                                margin: const EdgeInsets.only(right: 10),
                                 decoration: ShapeDecoration(
                                     color: widget.admin_user == 'true'
-                                        ? Color(0xFF2B3185)
-                                        : Color(0xFF2B3185),
+                                        ? const Color(0xFF2B3185)
+                                        : const Color(0xFF2B3185),
                                     shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(40))),
+                                        borderRadius:
+                                            BorderRadius.circular(40))),
                                 child: Icon(
                                   Icons.person,
                                   color: widget.admin_user == 'true'
@@ -553,32 +557,32 @@ class _UserState extends State<User> {
                               ),
                               TextButton(
                                 onPressed: widget.onTap2,
+                                style: TextButton.styleFrom(
+                                    backgroundColor: const Color(0xFF2B3185),
+                                    padding: const EdgeInsets.all(20)),
                                 child: Text(
                                   widget.admin_user == 'true'
                                       ? "التحويل الى مستخدم"
                                       : "التحويل الى ادمن",
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       fontFamily: 'font1',
                                       fontWeight: FontWeight.w700,
                                       color: Colors.white),
                                 ),
-                                style: TextButton.styleFrom(
-                                    backgroundColor: Color(0xFF2B3185),
-                                    padding: EdgeInsets.all(20)),
                               )
                             ],
                           ),
                         ),
                       ],
                     )
-                  : Text(
+                  : const Text(
                       "لا يمكن تعديل بيانات الحساب الحالي",
                       style: TextStyle(
                           fontFamily: 'font1',
                           fontWeight: FontWeight.w700,
                           color: Colors.black),
                     ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               widget.name12 != name.value
@@ -589,34 +593,35 @@ class _UserState extends State<User> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Container(
-                                padding: EdgeInsets.all(10),
-                                margin: EdgeInsets.only(right: 10),
+                                padding: const EdgeInsets.all(10),
+                                margin: const EdgeInsets.only(right: 10),
                                 decoration: ShapeDecoration(
                                     color: Colors.red,
                                     shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(40))),
-                                child: Icon(
+                                        borderRadius:
+                                            BorderRadius.circular(40))),
+                                child: const Icon(
                                   Icons.delete,
                                   color: Colors.white,
                                 ),
                               ),
                               TextButton(
                                 onPressed: widget.onTap1,
-                                child: Text(
+                                style: TextButton.styleFrom(
+                                    backgroundColor: Colors.red,
+                                    padding: const EdgeInsets.all(20)),
+                                child: const Text(
                                   "حذف الحساب نهائياً",
                                   style: TextStyle(
                                       fontFamily: 'font1',
                                       fontWeight: FontWeight.w700,
                                       color: Colors.white),
                                 ),
-                                style: TextButton.styleFrom(
-                                    backgroundColor: Colors.red,
-                                    padding: EdgeInsets.all(20)),
                               )
                             ],
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 40,
                         ),
                       ],

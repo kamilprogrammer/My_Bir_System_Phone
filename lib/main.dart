@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:rjd_app/Screens/AboutScreen.dart';
 
 import 'package:rjd_app/Screens/HomeScreen.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:rjd_app/Screens/LoginScreen.dart';
+import 'package:rjd_app/Screens/Register%201.dart';
 import 'package:rjd_app/Screens/ReportScreen.dart';
 import 'package:rjd_app/Screens/admin/AdminHomeScreen.dart';
 import 'package:rjd_app/Screens/admin/Users.dart';
@@ -64,7 +66,7 @@ Future<void> main() async {
 
   print(user_id.value);
 
-  runApp(MaterialApp(
+  runApp(const MaterialApp(
     home: MyApp(),
     debugShowCheckedModeBanner: false,
   ));
@@ -81,7 +83,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Future<void> updatelocal() async {
     final response = await http
-        .post(Uri.parse("http://192.168.1.169:8000/user/${user_id.value}"));
+        .post(Uri.parse("http://172.20.121.203:8000/user/${user_id.value}"));
 
     if (response.statusCode == 200) {
       final result =
@@ -98,10 +100,10 @@ class _MyAppState extends State<MyApp> {
         builder: (context) => Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
+            SizedBox(
                 width: MediaQuery.of(context).size.width - 80,
                 height: MediaQuery.of(context).size.width - 40,
-                child: False(
+                child: const False(
                     text: "حدث خطأ ما \nالرجاء التواصل مع الكادر التقني")),
           ],
         ),
@@ -114,28 +116,31 @@ class _MyAppState extends State<MyApp> {
 
   decideScreen() {
     if (user_id.value == '0') {
-      return Starter();
+      return const Starter();
     } else {
       updatelocal().then(
         (value) {
           print(admin1.value);
           if (admin1.value == 'true') {
-            return Navigator.push(context,
-                MaterialPageRoute(builder: (context) => Adminhomescreen()));
-          } else {
             return Navigator.push(
-                context, MaterialPageRoute(builder: (context) => Homescreen()));
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const Adminhomescreen()));
+          } else {
+            return Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const Homescreen()));
           }
         },
       );
     }
   }
 
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Scaffold(
-          drawer: MyDrawer(),
+          drawer: const MyDrawer(),
           body: decideScreen(),
         ));
   }
@@ -154,39 +159,6 @@ class _StarterState extends State<Starter> {
   @override
   void initState() {
     super.initState();
-    NfcManager.instance.isAvailable().then((value) {
-      print('NFC is available: $value');
-    });
-  }
-
-  Future<void> _startNFC() async {
-    print("kmr");
-    NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
-      var ndef = Ndef.from(tag);
-      NdefMessage? message1 = await ndef!.read();
-      NdefRecord record1 = message1.records[0];
-      print(utf8.decode(record1.payload));
-      result.value = tag.data;
-      if (record1.payload.isNotEmpty) {
-        showDialog(
-          context: context,
-          builder: (context) => Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                  width: MediaQuery.of(context).size.width - 80,
-                  height: MediaQuery.of(context).size.width - 40,
-                  child: True(text: "تم التقاط البطاقة")),
-            ],
-          ),
-        );
-      }
-
-      NfcManager.instance.stopSession();
-
-      //print(result.value);
-      print("kmr ------------------------");
-    });
   }
 
   @override
@@ -197,7 +169,7 @@ class _StarterState extends State<Starter> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(
+            const SizedBox(
               height: 100,
             ),
             Row(
@@ -206,13 +178,13 @@ class _StarterState extends State<Starter> {
                 Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(35),
-                    image: DecorationImage(
+                    image: const DecorationImage(
                       fit: BoxFit.cover,
                       image: AssetImage(
                         'assets/bir.jpg',
                       ),
                     ),
-                    boxShadow: [
+                    boxShadow: const [
                       BoxShadow(
                         color: Color(0x80000000),
                         offset: Offset(4, 4),
@@ -220,17 +192,17 @@ class _StarterState extends State<Starter> {
                       ),
                     ],
                   ),
-                  child: Container(
+                  child: const SizedBox(
                     width: 172,
                     height: 172,
                   ),
                 ),
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
-            Text(
+            const Text(
               'Rj-Data x Al-Bir Hospital \n Reports App',
               textAlign: TextAlign.center,
               style: TextStyle(
@@ -241,12 +213,12 @@ class _StarterState extends State<Starter> {
               ),
             ),
             Container(
-              margin: EdgeInsets.only(top: 20),
+              margin: const EdgeInsets.only(top: 20),
               decoration: ShapeDecoration(
                   color: Colors.black26,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10))),
-              padding: EdgeInsets.all(10),
+              padding: const EdgeInsets.all(10),
               child: Text(
                 textAlign: TextAlign.center,
                 'version: 1.0.5',
@@ -258,14 +230,14 @@ class _StarterState extends State<Starter> {
                 ),
               ),
             ),
-            SizedBox(
-              height: 174,
+            const SizedBox(
+              height: 130,
             ),
             Container(
               width: MediaQuery.of(context).size.width - 80,
               height: 52,
               decoration: ShapeDecoration(
-                gradient: LinearGradient(
+                gradient: const LinearGradient(
                   begin: Alignment(-1.00, -0.04),
                   end: Alignment(1, 0.04),
                   colors: [Color(0xFF2B3185), Color.fromARGB(255, 43, 49, 132)],
@@ -276,11 +248,14 @@ class _StarterState extends State<Starter> {
               ),
               child: TextButton(
                 onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => LoginScreen()));
+                  Navigator.push(
+                      context,
+                      PageTransition(
+                          type: PageTransitionType.bottomToTop,
+                          child: RegisterScreen()));
                 },
-                child: Text(
-                  'تسجيل/إنشاء',
+                child: const Text(
+                  'إنشاء حساب',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.white,
@@ -291,7 +266,43 @@ class _StarterState extends State<Starter> {
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
+              height: 30,
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width - 80,
+              height: 52,
+              decoration: ShapeDecoration(
+                gradient: const LinearGradient(
+                  begin: Alignment(-1.00, -0.04),
+                  end: Alignment(1, 0.04),
+                  colors: [Color(0xFF2B3185), Color.fromARGB(255, 43, 49, 132)],
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              child: TextButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      PageTransition(
+                          type: PageTransitionType.bottomToTop,
+                          child: LoginScreen()));
+                },
+                child: const Text(
+                  'تسجيل الدخول',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontFamily: 'font1',
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(
               height: 30,
             ),
           ],
