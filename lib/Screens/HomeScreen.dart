@@ -39,13 +39,13 @@ class _HomescreenState extends State<Homescreen> {
         debugShowCheckedModeBanner: false,
         home: Scaffold(
           floatingActionButtonLocation: reports.isEmpty
-              ? FloatingActionButtonLocation.centerFloat
+              ? FloatingActionButtonLocation.endFloat
               : FloatingActionButtonLocation.endFloat,
           floatingActionButton: Container(
               margin: reports.isEmpty
                   ? EdgeInsets.only(
-                      bottom: MediaQuery.of(context).size.height * 0.45)
-                  : EdgeInsets.all(0),
+                      bottom: MediaQuery.of(context).size.height * 0)
+                  : const EdgeInsets.all(0),
               child: FloatingActionButton(
                 onPressed: () {
                   Navigator.push(
@@ -180,7 +180,7 @@ class _HomescreenState extends State<Homescreen> {
     print(user_id.value);
     try {
       final url =
-          Uri.parse("http://172.20.121.203:8000/reports/${user_id.value}");
+          Uri.parse("http://192.168.0.100:3666/reports/${user_id.value}");
       final response = await http.post(url);
       final body = response.bodyBytes;
       final json = jsonDecode(utf8.decode(body));

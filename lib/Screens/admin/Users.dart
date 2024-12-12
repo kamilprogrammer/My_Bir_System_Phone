@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
@@ -10,8 +9,6 @@ import 'package:rjd_app/Screens/widgets/true.dart';
 import 'package:http/http.dart' as http;
 import 'package:rjd_app/main.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
-import 'package:crypto/crypto.dart';
-import 'dart:convert';
 
 class Users extends StatefulWidget {
   const Users({super.key});
@@ -141,7 +138,7 @@ class _UsersState extends State<Users> {
 
                                           final realIndex = updatedUser['id'];
                                           final req = await http.put(Uri.parse(
-                                              "http://172.20.121.203:8000/worker/$realIndex"));
+                                              "http://192.168.0.100:3666/worker/$realIndex"));
 
                                           if (req.statusCode == 200) {
                                             Future.delayed(
@@ -195,7 +192,8 @@ class _UsersState extends State<Users> {
                                                                 .width -
                                                             40,
                                                     child: const False(
-                                                        text: "حدث خطأ ما"),
+                                                        text:
+                                                            "حدث خطأ في النظام"),
                                                   ),
                                                 ],
                                               ),
@@ -206,9 +204,9 @@ class _UsersState extends State<Users> {
                                           print("asas");
                                           final realIndex = updatedUser['id'];
                                           final req = await http.put(Uri.parse(
-                                              "http://172.20.121.203:8000/not_worker/$realIndex"));
+                                              "http://192.168.0.100:3666/not_worker/$realIndex"));
                                           final req2 = await http.put(Uri.parse(
-                                              "http://172.20.121.203:8000/not_admin/$realIndex"));
+                                              "http://192.168.0.100:3666/not_admin/$realIndex"));
 
                                           if (req.statusCode == 200 &&
                                               req2.statusCode == 200) {
@@ -264,7 +262,8 @@ class _UsersState extends State<Users> {
                                                                 .width -
                                                             40,
                                                     child: const False(
-                                                        text: "حدث خطأ ما"),
+                                                        text:
+                                                            "حدث خطأ في النظام"),
                                                   ),
                                                 ],
                                               ),
@@ -307,7 +306,7 @@ class _UsersState extends State<Users> {
                                           print("asas");
                                           final realIndex = updatedUser['id'];
                                           final req = await http.put(Uri.parse(
-                                              "http://172.20.121.203:8000/admin/$realIndex"));
+                                              "http://192.168.0.100:3666/admin/$realIndex"));
 
                                           if (req.statusCode == 200) {
                                             Future.delayed(
@@ -361,7 +360,8 @@ class _UsersState extends State<Users> {
                                                                 .width -
                                                             40,
                                                     child: const False(
-                                                        text: "حدث خطأ ما"),
+                                                        text:
+                                                            "حدث خطأ في النظام"),
                                                   ),
                                                 ],
                                               ),
@@ -372,9 +372,9 @@ class _UsersState extends State<Users> {
 
                                           final realIndex = updatedUser['id'];
                                           final req = await http.put(Uri.parse(
-                                              "http://172.20.121.203:8000/not_admin/$realIndex"));
+                                              "http://192.168.0.100:3666/not_admin/$realIndex"));
                                           final req2 = await http.put(Uri.parse(
-                                              "http://172.20.121.203:8000/not_worker/$realIndex"));
+                                              "http://192.168.0.100:3666/not_worker/$realIndex"));
 
                                           if (req.statusCode == 200 &&
                                               req2.statusCode == 200) {
@@ -430,7 +430,8 @@ class _UsersState extends State<Users> {
                                                                 .width -
                                                             40,
                                                     child: const False(
-                                                        text: "حدث خطأ ما"),
+                                                        text:
+                                                            "حدث خطأ في النظام"),
                                                   ),
                                                 ],
                                               ),
@@ -442,7 +443,7 @@ class _UsersState extends State<Users> {
 
                                     Delete(int status) async {
                                       final response = await http.post(Uri.parse(
-                                          "http://172.20.121.203:8000/user/${user_id.value}"));
+                                          "http://192.168.0.100:3666/user/${user_id.value}"));
 
                                       if (response.statusCode == 200) {
                                         final result = jsonDecode(
@@ -480,7 +481,7 @@ class _UsersState extends State<Users> {
                                           print("asas");
                                           final realIndex = updatedReport['id'];
                                           final req = await http.delete(Uri.parse(
-                                              "http://172.20.121.203:8000/del_user/$realIndex"));
+                                              "http://192.168.0.100:3666/del_user/$realIndex"));
 
                                           if (req.statusCode == 200) {
                                             showDialog(
@@ -528,7 +529,7 @@ class _UsersState extends State<Users> {
                                                               40,
                                                           child: const False(
                                                               text:
-                                                                  "حدث خطأ ما"),
+                                                                  "حدث خطأ في النظام"),
                                                         ),
                                                       ],
                                                     ));
@@ -653,7 +654,7 @@ class _UsersState extends State<Users> {
                                                                 BorderRadius
                                                                     .circular(
                                                                         30))),
-                                                child: Icon(Icons.person,
+                                                child: const Icon(Icons.person,
                                                     color: Colors.white),
                                               ),
                                             ],
@@ -782,7 +783,7 @@ class _UsersState extends State<Users> {
                 SizedBox(
                   width: MediaQuery.of(context).size.width - 80,
                   height: MediaQuery.of(context).size.width - 40,
-                  child: const False(text: "حدث خطأ ما"),
+                  child: const False(text: "حدث خطأ في النظام"),
                 ),
               ],
             ),
@@ -791,7 +792,7 @@ class _UsersState extends State<Users> {
 
   Future<void> fetchUsers() async {
     try {
-      final url = Uri.parse("http://172.20.121.203:8000/users");
+      final url = Uri.parse("http://192.168.0.100:3666/users");
       final response = await http.get(url);
       final body = response.bodyBytes;
       final json = jsonDecode(utf8.decode(body));

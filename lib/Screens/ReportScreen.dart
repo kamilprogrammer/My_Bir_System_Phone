@@ -352,7 +352,7 @@ class _ReportScreenState extends State<ReportScreen> {
         desc_controller.text.isNotEmpty &&
         place_controller.text.isNotEmpty) {
       final response = await http.post(
-        Uri.parse("http://172.20.121.203:8000/add"),
+        Uri.parse("http://192.168.0.100:3666/add"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -382,28 +382,32 @@ class _ReportScreenState extends State<ReportScreen> {
 
         showDialog(
             context: context,
-            builder: (context) => Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width - 80,
-                      height: MediaQuery.of(context).size.width - 40,
-                      child: const True(text: "تم ارسال الطلب"),
-                    ),
-                  ],
+            builder: (context) => const SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: 300,
+                        height: 300,
+                        child: True(text: "تم ارسال الطلب"),
+                      ),
+                    ],
+                  ),
                 ));
       } else {
         showDialog(
             context: context,
-            builder: (context) => Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width - 80,
-                      height: MediaQuery.of(context).size.width - 40,
-                      child: const False(text: "حدث خطأ ما"),
-                    ),
-                  ],
+            builder: (context) => const SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: 300,
+                        height: 300,
+                        child: False(text: "حدث خطأ في النظام"),
+                      ),
+                    ],
+                  ),
                 ));
       }
     }

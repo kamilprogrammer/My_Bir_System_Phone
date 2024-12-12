@@ -1,20 +1,14 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:rjd_app/Screens/AboutScreen.dart';
-import 'package:rjd_app/Screens/HomeScreen.dart';
-import 'package:rjd_app/Screens/ReportScreen.dart';
 import 'package:rjd_app/Screens/admin/AdminHomeScreen2.dart';
-import 'package:rjd_app/Screens/widgets/AdminCard.dart';
 import 'package:http/http.dart' as http;
+
 import 'package:rjd_app/Screens/widgets/Card.dart';
 import 'package:rjd_app/Screens/widgets/Drawer.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:rjd_app/Screens/widgets/Full-Admin-Card.dart';
 import 'package:rjd_app/Screens/widgets/false.dart';
-import 'package:rjd_app/Screens/widgets/share.dart';
-import 'package:rjd_app/Screens/widgets/true.dart';
 import 'package:rjd_app/main.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
@@ -43,7 +37,7 @@ class _AdminhomescreenState extends State<Adminhomescreen> {
     String date = "All";
 
     int index = 0;
-    int inedx_clicked = 0;
+    int inedxClicked = 0;
     double width = MediaQuery.of(context).size.width;
     String? val = "";
     return admin1.value == 'true'
@@ -52,18 +46,18 @@ class _AdminhomescreenState extends State<Adminhomescreen> {
             child: Scaffold(
               drawer: const MyDrawer(),
               floatingActionButton: FloatingActionButton(
-                child: Icon(
-                  Icons.next_plan,
-                  color: Color(0xFF323751),
-                ).animate().rotate(),
                 backgroundColor: Colors.white,
                 onPressed: () {
                   Navigator.push(
                       context,
                       PageTransition(
                           type: PageTransitionType.rightToLeft,
-                          child: AdminHomeScreen2()));
+                          child: const AdminHomeScreen2()));
                 },
+                child: const Icon(
+                  Icons.next_plan,
+                  color: Color(0xFF323751),
+                ).animate().rotate(),
               ).animate().scaleXY(),
               appBar: AppBar(
                 actions: [
@@ -92,8 +86,8 @@ class _AdminhomescreenState extends State<Adminhomescreen> {
                       } else if (val == "Yesterday") {
                         setState(() {
                           date = DateFormat("yyyy-MM-dd")
-                              .format(
-                                  DateTime.now().subtract(Duration(days: 1)))
+                              .format(DateTime.now()
+                                  .subtract(const Duration(days: 1)))
                               .toString();
                         });
                         fetchReports(date, user);
@@ -241,7 +235,7 @@ class _AdminhomescreenState extends State<Adminhomescreen> {
                                         employees.insert(
                                             0, {"username": "جميع الحسابات"});
 
-                                        inedx_clicked = index;
+                                        inedxClicked = index;
                                         user = employee['username'];
                                       });
                                       fetchReports(date, user);
@@ -251,9 +245,9 @@ class _AdminhomescreenState extends State<Adminhomescreen> {
                                     }
                                   },
                                   child: Container(
-                                    padding: EdgeInsets.all(4),
+                                    padding: const EdgeInsets.all(4),
                                     height: 32,
-                                    decoration: BoxDecoration(
+                                    decoration: const BoxDecoration(
                                       color: Color(0xFF323751),
                                       borderRadius: BorderRadius.all(
                                         Radius.circular(8),
@@ -266,7 +260,7 @@ class _AdminhomescreenState extends State<Adminhomescreen> {
                                         Text(
                                           "${employee['username']}",
                                           textAlign: TextAlign.center,
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                               fontFamily: "font1",
                                               fontSize: 12,
                                               color: Colors.white),
@@ -277,7 +271,8 @@ class _AdminhomescreenState extends State<Adminhomescreen> {
                                 );
                               },
                             )
-                                .animate(delay: Duration(milliseconds: 50))
+                                .animate(
+                                    delay: const Duration(milliseconds: 50))
                                 .fade()
                                 .slideY(),
                           ),
@@ -295,11 +290,7 @@ class _AdminhomescreenState extends State<Adminhomescreen> {
                                     text: worker.value == 'true'
                                         ? "لايوجد أي طلب صيانة محوّل إليك"
                                         : "لا يوجد أي طلبات صيانة")
-                                : ListView.separated(
-                                    separatorBuilder: (context, index) =>
-                                        const SizedBox(
-                                      height: 0,
-                                    ),
+                                : ListView.builder(
                                     itemCount: reports.length,
                                     itemBuilder: (context, index) {
                                       final report = reports[index];
@@ -343,27 +334,27 @@ class _AdminhomescreenState extends State<Adminhomescreen> {
               SizedBox(
                 width: MediaQuery.of(context).size.width - 80,
                 height: MediaQuery.of(context).size.width - 40,
-                child: const False(text: "حدث خطأ ما"),
+                child: const False(text: "حدث خطأ في النظام"),
               ),
             ],
           );
   }
 
   Future<void> fetchReports(date, user) async {
-    final url = Uri.parse("http://172.20.121.203:8000/reports");
+    final url = Uri.parse("http://192.168.0.100:3666/reports");
     final response = await http.get(url);
     final body = response.bodyBytes;
-    final final_json = jsonDecode(utf8.decode(body));
+    final finalJson = jsonDecode(utf8.decode(body));
     if (date == "All" && user == "All") {
       setState(() {
-        reports = final_json;
+        reports = finalJson;
         reports = reports.where((test) {
           return test['done'] == "false";
         }).toList();
       });
     } else if (date != "All") {
       setState(() {
-        reports = final_json;
+        reports = finalJson;
         reports = reports
             .where((report) {
               return report['date'] == date;
@@ -377,7 +368,7 @@ class _AdminhomescreenState extends State<Adminhomescreen> {
       print(reports);
     } else if (user != "All") {
       setState(() {
-        reports = final_json;
+        reports = finalJson;
         reports = reports
             .where((report) {
               return report['name'] == user.toString();
@@ -392,7 +383,7 @@ class _AdminhomescreenState extends State<Adminhomescreen> {
   }
 
   Future<void> fetchEmployees() async {
-    final url = Uri.parse("http://172.20.121.203:8000/employees");
+    final url = Uri.parse("http://192.168.0.100:3666/employees");
     final response = await http.get(url);
     final body = response.bodyBytes;
     final json = jsonDecode(utf8.decode(body));

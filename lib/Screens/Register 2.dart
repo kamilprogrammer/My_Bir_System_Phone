@@ -1,10 +1,7 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:network_info_plus/network_info_plus.dart';
 import 'package:rjd_app/Screens/widgets/false.dart';
 import 'package:rjd_app/main.dart';
 import 'package:http/http.dart' as http;
@@ -40,7 +37,7 @@ class _RegisterScreen2State extends State<RegisterScreen2> {
 
   @override
   Widget build(BuildContext context) {
-    final _formSearchProductsKey = GlobalKey<FormState>();
+    final formSearchProductsKey = GlobalKey<FormState>();
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     return PopScope(
       canPop: false,
@@ -56,7 +53,7 @@ class _RegisterScreen2State extends State<RegisterScreen2> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Container(
-                        padding: const EdgeInsets.only(left: 80),
+                        padding: const EdgeInsets.only(left: 140),
                         width: MediaQuery.of(context).size.width > 375
                             ? MediaQuery.of(context).size.width * 50 / 100
                             : MediaQuery.of(context).size.width * 60 / 100,
@@ -159,7 +156,7 @@ class _RegisterScreen2State extends State<RegisterScreen2> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Container(
-                      margin: const EdgeInsets.only(right: 40),
+                      margin: const EdgeInsets.only(right: 90),
                       child: const Text(
                         'إكمال التسجيل',
                         style: TextStyle(
@@ -176,7 +173,7 @@ class _RegisterScreen2State extends State<RegisterScreen2> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Container(
-                      margin: const EdgeInsets.only(right: 40, top: 0),
+                      margin: const EdgeInsets.only(right: 90, top: 0),
                       child: Text(
                         'الرجاء إدخال البيانات المتبقية',
                         style: TextStyle(
@@ -210,14 +207,14 @@ class _RegisterScreen2State extends State<RegisterScreen2> {
                           )
                         ],
                       ),
-                      width: MediaQuery.of(context).size.width - 60,
+                      width: MediaQuery.of(context).size.width - 180,
                       height: 46,
                       child: Row(
                         children: [
                           SizedBox(
                             width: sections.length != 1
-                                ? MediaQuery.of(context).size.width - 146
-                                : MediaQuery.of(context).size.width - 170,
+                                ? MediaQuery.of(context).size.width - 270
+                                : MediaQuery.of(context).size.width - 270,
                           ),
                           sections.length != 1
                               ? DropdownButton(
@@ -245,7 +242,7 @@ class _RegisterScreen2State extends State<RegisterScreen2> {
                               : const Row(
                                   children: [
                                     Text(
-                                      "حدث خطأ ما",
+                                      "حدث خطأ في النظام",
                                       style: TextStyle(
                                           fontFamily: "font1",
                                           fontWeight: FontWeight.w700,
@@ -287,7 +284,7 @@ class _RegisterScreen2State extends State<RegisterScreen2> {
                           )
                         ],
                       ),
-                      width: MediaQuery.of(context).size.width - 60,
+                      width: MediaQuery.of(context).size.width - 180,
                       height: 46,
                       child: TextFormField(
                         textInputAction: TextInputAction.done,
@@ -333,7 +330,7 @@ class _RegisterScreen2State extends State<RegisterScreen2> {
                               await Register(deviceInfo);
                             },
                             child: Container(
-                              width: MediaQuery.of(context).size.width - 160,
+                              width: MediaQuery.of(context).size.width - 320,
                               height: 55,
                               clipBehavior: Clip.antiAlias,
                               decoration: ShapeDecoration(
@@ -375,7 +372,7 @@ class _RegisterScreen2State extends State<RegisterScreen2> {
                               Navigator.pop(context);
                             },
                             child: Container(
-                              width: MediaQuery.of(context).size.width - 200,
+                              width: MediaQuery.of(context).size.width - 380,
                               height: 55,
                               clipBehavior: Clip.antiAlias,
                               decoration: ShapeDecoration(
@@ -467,7 +464,7 @@ class _RegisterScreen2State extends State<RegisterScreen2> {
   Future<void> fetching_sections() async {
     print("here");
     final request = await http.post(Uri.parse(
-        "http://172.20.121.203:8000/sections/${widget.floor_controller.toString()}"));
+        "http://192.168.0.100:3666/sections/${widget.floor_controller.toString()}"));
     if (request.statusCode == 200) {
       List<dynamic> list1 = jsonDecode(utf8.decode(request.bodyBytes));
       print(list1);
@@ -502,13 +499,12 @@ class _RegisterScreen2State extends State<RegisterScreen2> {
     if (widget.name_controller.isNotEmpty &&
         widget.floor_controller != "0" &&
         section_count != "0" &&
-        pass_controller.text.isNotEmpty &&
-        pass_controller.text.length > 8) {
+        pass_controller.text.length > 7) {
       final password = pass_controller.text;
 
       final encryptedPassword = encryptPassword(password);
       final response = await http.post(
-        Uri.parse("http://172.20.121.203:8000/register"),
+        Uri.parse("http://192.168.0.100:3666/register"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           "Access-Control-Allow-Origin": "*",
@@ -551,7 +547,7 @@ class _RegisterScreen2State extends State<RegisterScreen2> {
         floor.value = widget.floor_controller;
         admin1.value = admin();
         worker.value = result['worker'];
-        if (kIsWeb) {
+        /*if (kIsWeb) {
           print("web");
         } else {
           if (Platform.operatingSystem == "android") {
@@ -577,14 +573,14 @@ class _RegisterScreen2State extends State<RegisterScreen2> {
             print(json);
             final responsePhone = await http.post(
               Uri.parse(
-                  "http://172.20.121.203:8000/phone?name=${name.value}&json=${json.toString()}"),
+                  "http://192.168.0.100:3666/phone?name=${name.value}&json=${json.toString()}"),
               body: {
                 'name': "name.value.toString()",
                 'json': "json.toString()"
               },
             );
           }
-        }
+        }*/
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => const MyApp()));
       } else {
@@ -596,7 +592,7 @@ class _RegisterScreen2State extends State<RegisterScreen2> {
               SizedBox(
                 width: MediaQuery.of(context).size.width - 80,
                 height: MediaQuery.of(context).size.width - 40,
-                child: const False(text: "حدث خطأ ما"),
+                child: const False(text: "حدث خطأ في النظام"),
               ),
             ],
           ),

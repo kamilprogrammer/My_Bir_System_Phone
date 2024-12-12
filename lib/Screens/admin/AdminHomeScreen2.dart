@@ -20,6 +20,7 @@ class AdminHomeScreen2 extends StatefulWidget {
 }
 
 class _AdminHomeScreen2State extends State<AdminHomeScreen2> {
+  @override
   void initState() {
     super.initState();
 
@@ -41,21 +42,21 @@ class _AdminHomeScreen2State extends State<AdminHomeScreen2> {
               floatingActionButtonLocation:
                   FloatingActionButtonLocation.startFloat,
               floatingActionButton: FloatingActionButton(
-                child: Transform.scale(
-                  scaleX: -1,
-                  child: Icon(
-                    Icons.next_plan,
-                    color: Color(0xFF323751),
-                  ).animate().rotate(),
-                ),
                 backgroundColor: Colors.white,
                 onPressed: () {
                   Navigator.push(
                       context,
                       PageTransition(
                           type: PageTransitionType.leftToRight,
-                          child: Adminhomescreen()));
+                          child: const Adminhomescreen()));
                 },
+                child: Transform.scale(
+                  scaleX: -1,
+                  child: const Icon(
+                    Icons.next_plan,
+                    color: Color(0xFF323751),
+                  ).animate().rotate(),
+                ),
               ).animate().scaleXY(),
               appBar: AppBar(
                 actions: [
@@ -84,8 +85,8 @@ class _AdminHomeScreen2State extends State<AdminHomeScreen2> {
                       } else if (val == "Yesterday") {
                         setState(() {
                           date = DateFormat("yyyy-MM-dd")
-                              .format(
-                                  DateTime.now().subtract(Duration(days: 1)))
+                              .format(DateTime.now()
+                                  .subtract(const Duration(days: 1)))
                               .toString();
                         });
                         fetchReports(date, user);
@@ -264,29 +265,29 @@ class _AdminHomeScreen2State extends State<AdminHomeScreen2> {
               SizedBox(
                 width: MediaQuery.of(context).size.width - 80,
                 height: MediaQuery.of(context).size.width - 40,
-                child: const False(text: "حدث خطأ ما"),
+                child: const False(text: "حدث خطأ في النظام"),
               ),
             ],
           );
   }
 
   Future<void> fetchReports(date, user) async {
-    final url = Uri.parse("http://172.20.121.203:8000/reports");
+    final url = Uri.parse("http://192.168.0.100:3666/reports");
     final response = await http.get(url);
     final body = response.bodyBytes;
-    final final_json = jsonDecode(utf8.decode(body));
-    List result = final_json;
-    List report_here = result.where((report) {
+    final finalJson = jsonDecode(utf8.decode(body));
+    List result = finalJson;
+    List reportHere = result.where((report) {
       return report['done'] == "true";
     }).toList();
     if (date == "All" && user == "All") {
       setState(() {
-        reports = report_here;
+        reports = reportHere;
       });
     } else if (date != "All") {
       print(user + date);
       setState(() {
-        reports = report_here.where((report) {
+        reports = reportHere.where((report) {
           return report['date'] == date;
         }).toList();
       });

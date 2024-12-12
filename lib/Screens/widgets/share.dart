@@ -29,8 +29,8 @@ class _ShareState extends State<ShareWidget> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: MediaQuery.of(context).size.height - 400,
-      width: MediaQuery.of(context).size.width - 60,
+      height: 400,
+      width: 350,
       child: Dialog(
         alignment: Alignment.center,
         child: SingleChildScrollView(
@@ -242,7 +242,7 @@ class _ShareState extends State<ShareWidget> {
 
   Future<void> reload() async {
     try {
-      final url = Uri.parse("http://172.20.121.203:8000/workers");
+      final url = Uri.parse("http://192.168.0.100:3666/employees");
       final response2 = await http.get(url);
       final body = response2.bodyBytes;
       final json = jsonDecode(utf8.decode(body));
@@ -252,7 +252,7 @@ class _ShareState extends State<ShareWidget> {
       });
 
       final response1 = await http.post(
-          Uri.parse("http://172.20.121.203:8000/report/${widget.report_id}"));
+          Uri.parse("http://192.168.0.100:3666/report/${widget.report_id}"));
       final body1 = jsonDecode(response1.body);
 
       for (var worker in workers) {
@@ -281,7 +281,7 @@ class _ShareState extends State<ShareWidget> {
   /*Future<void> get_done_by_s() async {
     try {
       final url =
-          Uri.parse("http://172.20.121.203:8000/report/${widget.report_id}");
+          Uri.parse("http://192.168.0.100:3666/report/${widget.report_id}");
       final response = await http.post(url);
       final body = response.bodyBytes;
 
@@ -385,18 +385,18 @@ class _ShareState extends State<ShareWidget> {
           .then((bool1) async {
         if (bool1 == true) {
           final request = await http.put(Uri.parse(
-              "http://172.20.121.203:8000/share/${widget.report_id}/$share1/$share2"));
+              "http://192.168.0.100:3666/share/${widget.report_id}/$share1/$share2"));
           if (request.statusCode == 200) {
             Navigator.pop(context);
             showDialog(
               context: context,
-              builder: (context) => Column(
+              builder: (context) => const Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(
-                    width: MediaQuery.of(context).size.width - 80,
-                    height: MediaQuery.of(context).size.width - 40,
-                    child: const True(text: "تم تحديث البيانات"),
+                    width: 300,
+                    height: 300,
+                    child: True(text: "تم تحديث البيانات"),
                   ),
                 ],
               ),
@@ -406,35 +406,39 @@ class _ShareState extends State<ShareWidget> {
       });
     } else {
       final request = await http.put(Uri.parse(
-          "http://172.20.121.203:8000/share/${widget.report_id}/$share1/$share2"));
+          "http://192.168.0.100:3666/share/${widget.report_id}/$share1/$share2"));
 
       if (request.statusCode == 200) {
         Navigator.pop(context);
         showDialog(
           context: context,
-          builder: (context) => Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                width: MediaQuery.of(context).size.width - 80,
-                height: MediaQuery.of(context).size.width - 40,
-                child: const True(text: "تم تحويل المهمة"),
-              ),
-            ],
+          builder: (context) => const SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 300,
+                  height: 300,
+                  child: True(text: "تم تحويل المهمة"),
+                ),
+              ],
+            ),
           ),
         );
       } else {
         showDialog(
           context: context,
-          builder: (context) => Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                width: MediaQuery.of(context).size.width - 80,
-                height: MediaQuery.of(context).size.width - 40,
-                child: const False(text: "حدث خطأ ما"),
-              ),
-            ],
+          builder: (context) => const SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 300,
+                  height: 300,
+                  child: True(text: "تم تحويل المهمة"),
+                ),
+              ],
+            ),
           ),
         );
       }

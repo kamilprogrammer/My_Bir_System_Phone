@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:rjd_app/main.dart';
 
 class StatusCard extends StatelessWidget {
   const StatusCard(
@@ -20,14 +19,14 @@ class StatusCard extends StatelessWidget {
 
   Widget _buildContentRow(IconData icon, String text, double screenWidth) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: screenWidth * 0.01),
+      padding: EdgeInsets.symmetric(vertical: screenWidth * 0.009),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Expanded(
             child: Text(
               text,
-              style: TextStyle(fontSize: 14, fontFamily: "font1"),
+              style: const TextStyle(fontSize: 14, fontFamily: "font1"),
             ),
           ),
           SizedBox(width: screenWidth * 0.03),
@@ -50,10 +49,10 @@ class StatusCard extends StatelessWidget {
     double screenHeight = MediaQuery.of(context).size.height;
 
     return Stack(
-      alignment: Alignment.topRight,
+      alignment: Alignment.topCenter,
       children: [
         Padding(
-          padding: EdgeInsets.all(screenWidth * 0.05),
+          padding: EdgeInsets.all(screenWidth * 0.01),
           child: Container(
             margin: EdgeInsets.only(
                 left: screenWidth * 0.05, right: screenWidth * 0.05, top: 2),
@@ -73,7 +72,7 @@ class StatusCard extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        "$section | ${title}",
+                        "$section | $title",
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                           fontFamily: "font1",
@@ -95,7 +94,7 @@ class StatusCard extends StatelessWidget {
           ),
         ),
         Container(
-          margin: EdgeInsets.only(right: screenWidth * 0.06, top: 6),
+          margin: const EdgeInsets.only(bottom: 10),
           width: 40,
           height: 40,
           decoration: ShapeDecoration(

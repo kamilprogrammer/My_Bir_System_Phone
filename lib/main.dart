@@ -1,23 +1,15 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
-
-import 'package:rjd_app/Screens/AboutScreen.dart';
-
 import 'package:rjd_app/Screens/HomeScreen.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:rjd_app/Screens/LoginScreen.dart';
 import 'package:rjd_app/Screens/Register%201.dart';
-import 'package:rjd_app/Screens/ReportScreen.dart';
 import 'package:rjd_app/Screens/admin/AdminHomeScreen.dart';
-import 'package:rjd_app/Screens/admin/Users.dart';
-import 'package:rjd_app/Screens/test.dart';
 import 'package:http/http.dart' as http;
 import 'package:localstorage/localstorage.dart';
 import 'package:rjd_app/Screens/widgets/Drawer.dart';
 import 'package:rjd_app/Screens/widgets/false.dart';
-import 'package:rjd_app/Screens/widgets/true.dart';
-import 'package:nfc_manager/nfc_manager.dart';
 
 late final ValueNotifier<String> user_id;
 late final ValueNotifier<String> name;
@@ -83,7 +75,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Future<void> updatelocal() async {
     final response = await http
-        .post(Uri.parse("http://172.20.121.203:8000/user/${user_id.value}"));
+        .post(Uri.parse("http://192.168.0.100:3666/user/${user_id.value}"));
 
     if (response.statusCode == 200) {
       final result =
@@ -104,7 +96,8 @@ class _MyAppState extends State<MyApp> {
                 width: MediaQuery.of(context).size.width - 80,
                 height: MediaQuery.of(context).size.width - 40,
                 child: const False(
-                    text: "حدث خطأ ما \nالرجاء التواصل مع الكادر التقني")),
+                    text:
+                        "حدث خطأ في النظام \nالرجاء التواصل مع الكادر التقني")),
           ],
         ),
       );
@@ -231,7 +224,7 @@ class _StarterState extends State<Starter> {
               ),
             ),
             const SizedBox(
-              height: 130,
+              height: 80,
             ),
             Container(
               width: MediaQuery.of(context).size.width - 80,
@@ -252,7 +245,8 @@ class _StarterState extends State<Starter> {
                       context,
                       PageTransition(
                           type: PageTransitionType.bottomToTop,
-                          child: RegisterScreen()));
+                          duration: Duration(milliseconds: 300),
+                          child: const RegisterScreen()));
                 },
                 child: const Text(
                   'إنشاء حساب',
@@ -288,7 +282,8 @@ class _StarterState extends State<Starter> {
                       context,
                       PageTransition(
                           type: PageTransitionType.bottomToTop,
-                          child: LoginScreen()));
+                          duration: Duration(milliseconds: 300),
+                          child: const LoginScreen()));
                 },
                 child: const Text(
                   'تسجيل الدخول',

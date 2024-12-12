@@ -32,7 +32,7 @@ class LoginScreen extends StatelessWidget {
 
         final encryptedPassword = encryptPassword(password);
         final response = await http.post(
-          Uri.parse("http://172.20.121.203:8000/login"),
+          Uri.parse("http://192.168.0.100:3666/login"),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
             "Access-Control-Allow-Origin": "*",
@@ -49,15 +49,17 @@ class LoginScreen extends StatelessWidget {
         if (response.statusCode == 203) {
           showDialog(
             context: context,
-            builder: (context) => Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width - 80,
-                  height: MediaQuery.of(context).size.width - 40,
-                  child: const False(text: "حساب غير متواجد"),
-                ),
-              ],
+            builder: (context) => const SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: 300,
+                    height: 300,
+                    child: False(text: "حساب غير متواجد"),
+                  ),
+                ],
+              ),
             ),
           );
         } else if (response.statusCode == 201) {
@@ -74,29 +76,33 @@ class LoginScreen extends StatelessWidget {
         } else {
           showDialog(
             context: context,
-            builder: (context) => Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width - 80,
-                  height: MediaQuery.of(context).size.width - 40,
-                  child: const False(text: "حدث خطأ ما"),
-                ),
-              ],
+            builder: (context) => const SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: 300,
+                    height: 300,
+                    child: False(text: "حدث خطأ في النظام"),
+                  ),
+                ],
+              ),
             ),
           );
         }
       } else {
         showDialog(
           context: context,
-          builder: (context) => Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                  width: MediaQuery.of(context).size.width - 80,
-                  height: MediaQuery.of(context).size.width - 40,
-                  child: const False(text: "الرجاء ملء جميع الحقول")),
-            ],
+          builder: (context) => const SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                    width: 300,
+                    height: 300,
+                    child: False(text: "الرجاء ملء جميع الحقول")),
+              ],
+            ),
           ),
         );
       }
@@ -116,7 +122,7 @@ class LoginScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Container(
-                      padding: const EdgeInsets.only(left: 80),
+                      padding: const EdgeInsets.only(left: 140),
                       width: MediaQuery.of(context).size.width > 375
                           ? MediaQuery.of(context).size.width * 50 / 100
                           : MediaQuery.of(context).size.width * 60 / 100,
@@ -218,7 +224,7 @@ class LoginScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Container(
-                    margin: const EdgeInsets.only(right: 40),
+                    margin: const EdgeInsets.only(right: 90),
                     child: const Text(
                       'تسجيل الدخول',
                       style: TextStyle(
@@ -235,7 +241,7 @@ class LoginScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Container(
-                    margin: const EdgeInsets.only(right: 40, top: 0),
+                    margin: const EdgeInsets.only(right: 90, top: 0),
                     child: Text(
                       "الرجاء إدخال البيانات المطلوبة",
                       style: TextStyle(
@@ -269,7 +275,7 @@ class LoginScreen extends StatelessWidget {
                         )
                       ],
                     ),
-                    width: MediaQuery.of(context).size.width - 60,
+                    width: MediaQuery.of(context).size.width - 180,
                     height: 46,
                     child: TextField(
                       style: TextStyle(
@@ -320,7 +326,7 @@ class LoginScreen extends StatelessWidget {
                           )
                         ],
                       ),
-                      width: MediaQuery.of(context).size.width - 60,
+                      width: MediaQuery.of(context).size.width - 180,
                       height: 46,
                       child: TextFormField(
                         validator: (String? val) {
@@ -365,7 +371,7 @@ class LoginScreen extends StatelessWidget {
                   await Login();
                 },
                 child: Container(
-                  width: MediaQuery.of(context).size.width - 160,
+                  width: MediaQuery.of(context).size.width - 320,
                   height: 55,
                   clipBehavior: Clip.antiAlias,
                   decoration: ShapeDecoration(
@@ -402,12 +408,15 @@ class LoginScreen extends StatelessWidget {
                   ),
                 ),
               ),
+              const SizedBox(
+                height: 20,
+              ),
               TextButton(
                 onPressed: () async {
                   Navigator.pop(context);
                 },
                 child: Container(
-                  width: MediaQuery.of(context).size.width - 200,
+                  width: MediaQuery.of(context).size.width - 380,
                   height: 55,
                   clipBehavior: Clip.antiAlias,
                   decoration: ShapeDecoration(

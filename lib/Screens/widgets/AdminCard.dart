@@ -79,7 +79,7 @@ class AdminCard extends StatelessWidget {
                                   children: [
                                     IconButton(
                                       onPressed: share,
-                                      icon: Icon(Icons.share,
+                                      icon: const Icon(Icons.share,
                                           color: Colors.white, size: 20.0),
                                     )
                                   ],

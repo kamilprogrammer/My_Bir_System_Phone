@@ -1,19 +1,12 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:page_transition/page_transition.dart';
-import 'dart:io' show Platform;
 import 'package:rjd_app/Screens/AboutScreen.dart';
 import 'package:rjd_app/Screens/HomeScreen.dart';
 import 'package:rjd_app/Screens/ReportScreen.dart';
 import 'package:rjd_app/Screens/admin/AdminHomeScreen.dart';
 import 'package:rjd_app/Screens/admin/Users.dart';
 import 'package:rjd_app/main.dart';
-import 'package:device_info_plus/device_info_plus.dart';
-import 'package:flutter/foundation.dart';
-import 'package:network_info_plus/network_info_plus.dart';
-import 'package:http/http.dart' as http;
 
 class MyDrawer extends StatefulWidget {
   const MyDrawer({super.key});
@@ -123,13 +116,13 @@ class _MyDrawerState extends State<MyDrawer> {
                           context,
                           PageTransition(
                               type: PageTransitionType.rightToLeft,
-                              child: Adminhomescreen()));
+                              child: const Adminhomescreen()));
                     } else {
                       Navigator.push(
                           context,
                           PageTransition(
                               type: PageTransitionType.rightToLeft,
-                              child: Homescreen()));
+                              child: const Homescreen()));
                     }
 
                     // Handle tap
@@ -153,7 +146,7 @@ class _MyDrawerState extends State<MyDrawer> {
                               context,
                               PageTransition(
                                   type: PageTransitionType.rightToLeft,
-                                  child: ReportScreen()));
+                                  child: const ReportScreen()));
                           // Handle tap
                         },
                       )
@@ -174,7 +167,7 @@ class _MyDrawerState extends State<MyDrawer> {
                               context,
                               PageTransition(
                                   type: PageTransitionType.rightToLeft,
-                                  child: Users()));
+                                  child: const Users()));
                           // Handle tap
                         },
                       ),
@@ -195,7 +188,7 @@ class _MyDrawerState extends State<MyDrawer> {
                         context,
                         PageTransition(
                             type: PageTransitionType.rightToLeft,
-                            child: AboutScreen()));
+                            child: const AboutScreen()));
                     // Handle tap
                   },
                 ),

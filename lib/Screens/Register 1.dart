@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:rjd_app/Screens/Register%202.dart';
 import 'package:rjd_app/Screens/widgets/false.dart';
 //import 'package:shared_preferences/shared_preferences.dart';
@@ -32,7 +33,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Container(
-                        padding: const EdgeInsets.only(left: 80),
+                        padding: const EdgeInsets.only(left: 140),
                         width: MediaQuery.of(context).size.width > 375
                             ? MediaQuery.of(context).size.width * 50 / 100
                             : MediaQuery.of(context).size.width * 60 / 100,
@@ -135,7 +136,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Container(
-                      margin: const EdgeInsets.only(right: 40),
+                      margin: const EdgeInsets.only(right: 90),
                       child: const Text(
                         'إنشاء الحساب',
                         style: TextStyle(
@@ -152,7 +153,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Container(
-                      margin: const EdgeInsets.only(right: 40, top: 0),
+                      margin: const EdgeInsets.only(right: 90, top: 0),
                       child: Text(
                         "الرجاء إدخال البيانات المطلوبة",
                         style: TextStyle(
@@ -186,7 +187,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           )
                         ],
                       ),
-                      width: MediaQuery.of(context).size.width - 60,
+                      width: MediaQuery.of(context).size.width - 180,
                       height: 46,
                       child: TextField(
                         style: TextStyle(
@@ -237,12 +238,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           )
                         ],
                       ),
-                      width: MediaQuery.of(context).size.width - 60,
+                      width: MediaQuery.of(context).size.width - 180,
                       height: 46,
                       child: Row(
                         children: [
                           SizedBox(
-                            width: MediaQuery.of(context).size.width - 150,
+                            width: MediaQuery.of(context).size.width - 286,
                           ),
                           DropdownButton(
                             style: TextStyle(
@@ -333,6 +334,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   "10 ",
                                 ),
                               ),
+                              DropdownMenuItem(
+                                value: "11",
+                                child: Text(
+                                  "قسم الكلية ",
+                                ),
+                              ),
                             ],
                           ),
                         ],
@@ -350,8 +357,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         floor_count != "الطابق") {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) => RegisterScreen2(
+                        PageTransition(
+                          type: PageTransitionType.bottomToTop,
+                          child: RegisterScreen2(
                               name_controller: name_controller.text,
                               floor_controller: floor_count),
                         ),
@@ -359,21 +367,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     } else {
                       showDialog(
                         context: context,
-                        builder: (context) => Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                                width: MediaQuery.of(context).size.width - 80,
-                                height: MediaQuery.of(context).size.width - 40,
-                                child: const False(
-                                    text: "الرجاء ملء جميع الحقول")),
-                          ],
+                        builder: (context) => const SingleChildScrollView(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                  width: 300,
+                                  height: 300,
+                                  child: False(text: "الرجاء ملء جميع الحقول")),
+                            ],
+                          ),
                         ),
                       );
                     }
                   },
                   child: Container(
-                    width: width - 160,
+                    width: width - 320,
                     height: 55,
                     clipBehavior: Clip.antiAlias,
                     decoration: ShapeDecoration(
@@ -415,7 +424,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     Navigator.pop(context);
                   },
                   child: Container(
-                    width: MediaQuery.of(context).size.width - 200,
+                    width: MediaQuery.of(context).size.width - 380,
                     height: 55,
                     clipBehavior: Clip.antiAlias,
                     decoration: ShapeDecoration(

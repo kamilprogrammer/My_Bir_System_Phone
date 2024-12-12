@@ -87,7 +87,7 @@ class _UserState extends State<User> {
         final encryptedPassword = encryptPassword(password);
         final response = await http.put(
           Uri.parse(
-              "http://172.20.121.203:8000/update_user/${widget.User_data['id']}"),
+              "http://192.168.0.100:3666/update_user/${widget.User_data['id']}"),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
             "Access-Control-Allow-Origin": "*",

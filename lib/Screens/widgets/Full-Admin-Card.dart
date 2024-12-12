@@ -4,6 +4,7 @@ import 'package:rjd_app/Screens/admin/AdminHomeScreen.dart';
 import 'package:rjd_app/Screens/widgets/Card.dart';
 import 'package:action_slider/action_slider.dart';
 import 'package:rjd_app/Screens/widgets/false.dart';
+import 'package:rjd_app/Screens/widgets/share.dart';
 import 'package:rjd_app/Screens/widgets/true.dart';
 import 'package:http/http.dart' as http;
 import 'package:rjd_app/main.dart';
@@ -53,33 +54,34 @@ class _Full_Admin_CardState extends State<Full_Admin_Card> {
             ),
             centerTitle: true,
           ),
-          body: Container(
-            clipBehavior: Clip.antiAlias,
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment(0.21, 0.98),
-                end: Alignment(-0.21, -0.98),
-                colors: [
-                  Color(0xFF17161C),
-                  Color(0xFF323751),
-                  Color(0x6F3949A1),
-                  Color(0x000026FF)
-                ],
-              ),
-            ),
-            child: Column(
-              children: [
-                StatusCard(
-                    section: widget.card['desc'],
-                    title: widget.card['name'],
-                    desc: widget.card['desc'],
-                    done: bool.parse(widget.card['done']),
-                    notes: "notes",
-                    index: widget.index),
-                const SizedBox(
-                  height: 20,
+          body: SingleChildScrollView(
+            child: Container(
+              clipBehavior: Clip.antiAlias,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment(0.21, 0.98),
+                  end: Alignment(-0.21, -0.98),
+                  colors: [
+                    Color(0xFF17161C),
+                    Color(0xFF323751),
+                    Color(0x6F3949A1),
+                    Color(0x000026FF)
+                  ],
                 ),
-                SizedBox(
+              ),
+              child: Column(
+                children: [
+                  StatusCard(
+                      section: widget.card['desc'],
+                      title: widget.card['name'],
+                      desc: widget.card['desc'],
+                      done: bool.parse(widget.card['done']),
+                      notes: "notes",
+                      index: widget.index),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  SizedBox(
                     width: MediaQuery.of(context).size.width - 60,
                     child: widget.card['done'] == 'false'
                         ? ActionSlider.standard(
@@ -117,8 +119,41 @@ class _Full_Admin_CardState extends State<Full_Admin_Card> {
                                   style: TextStyle(
                                       fontFamily: "font1", fontSize: 15),
                                 )),
-                          ))
-              ],
+                          ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  widget.card['done'] == "false"
+                      ? SizedBox(
+                          width: MediaQuery.of(context).size.width - 60,
+                          child: ActionSlider.standard(
+                            toggleColor: Colors.blue,
+                            action: (controller) async {
+                              controller.loading();
+                              await View_Share();
+
+                              controller.success();
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.only(left: 30),
+                              child: const Text(
+                                'تحويل البلاغ',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontFamily: "font1", fontSize: 15),
+                              ),
+                            ),
+                          ),
+                        )
+                      : const SizedBox(
+                          height: 40,
+                        ),
+                  const SizedBox(
+                    height: 40,
+                  )
+                ],
+              ),
             ),
           ),
         ),
@@ -126,59 +161,80 @@ class _Full_Admin_CardState extends State<Full_Admin_Card> {
     );
   }
 
+  Future<void> View_Share() async {
+    //final reportShared = reports[status];
+    //int reportId = reportShared['id'];
+
+    showDialog(
+        context: context,
+        builder: (context) => SizedBox(
+              height: 400,
+              width: 350,
+              child: ShareWidget(
+                report_id: widget.card['id'],
+              ),
+            ));
+  }
+
   Future<void> Update() async {
     final req = await http
-        .put(Uri.parse("http://172.20.121.203:8000/done/${widget.card['id']}"));
+        .put(Uri.parse("http://192.168.0.100:3666/done/${widget.card['id']}"));
 
     if (req.statusCode == 200) {
       Future.delayed(const Duration(seconds: 1)).then((val) {
         showDialog(
           context: context,
-          builder: (context) => Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                width: MediaQuery.of(context).size.width - 80,
-                height: MediaQuery.of(context).size.width - 40,
-                child: const True(text: "تم تحديث البيانات"),
-              ),
-            ],
+          builder: (context) => const SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 300,
+                  height: 300,
+                  child: True(text: "تم تحديث البيانات"),
+                ),
+              ],
+            ),
           ),
         );
       });
     } else {
       showDialog(
           context: context,
-          builder: (context) => Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width - 80,
-                    height: MediaQuery.of(context).size.width - 40,
-                    child: const False(text: "حدث خطأ ما"),
-                  ),
-                ],
+          builder: (context) => const SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: 300,
+                      height: 300,
+                      child: False(text: "حدث خطأ في النظام"),
+                    ),
+                  ],
+                ),
               ));
     }
   }
 
   Future<void> NotYet() async {
     final req = await http.put(
-        Uri.parse("http://172.20.121.203:8000/notyet/${widget.card['id']}"));
+        Uri.parse("http://192.168.0.100:3666/notyet/${widget.card['id']}"));
 
     if (req.statusCode == 200) {
       Future.delayed(const Duration(seconds: 1)).then((val) {
         showDialog(
           context: context,
-          builder: (context) => Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                width: MediaQuery.of(context).size.width - 80,
-                height: MediaQuery.of(context).size.width - 40,
-                child: const True(text: "تم تحديث البيانات"),
-              ),
-            ],
+          builder: (context) => const SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 300,
+                  height: 300,
+                  child: True(text: "تم تحديث البيانات"),
+                ),
+              ],
+            ),
           ),
         );
       });
@@ -191,7 +247,7 @@ class _Full_Admin_CardState extends State<Full_Admin_Card> {
             SizedBox(
               width: MediaQuery.of(context).size.width - 80,
               height: MediaQuery.of(context).size.width - 40,
-              child: const False(text: "حدث خطأ ما"),
+              child: const False(text: "حدث خطأ في النظام"),
             ),
           ],
         ),
